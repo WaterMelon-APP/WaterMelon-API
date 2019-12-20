@@ -32,7 +32,8 @@ namespace WaterMelon_API
             services.AddSingleton<IUserDatabaseSettings>(sp =>
         sp.GetRequiredService<IOptions<UserDatabaseSettings>>().Value);
             services.AddSingleton<UserService>();
-            services.AddControllers();
+            services.AddControllers()
+                        .AddNewtonsoftJson(options => options.UseMemberCasing());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
