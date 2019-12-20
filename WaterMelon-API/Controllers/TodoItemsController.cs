@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WaterMelon_API.Models;
-using Parse;
 
 namespace WaterMelon_API.Controllers
 {
