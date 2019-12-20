@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using WaterMelon_API.Models;
+using Microsoft.Extensions.Options;
+using WaterMelon_API.Services;
 
 namespace WaterMelon_API
 {
@@ -24,7 +26,12 @@ namespace WaterMelon_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+            // requires using Microsoft.Extensions.Options
+            services.Configure<UserDatabaseSettings>(
+                Configuration.GetSection(nameof(UserDatabaseSettings)));
+            services.AddSingleton<IUserDatabaseSettings>(sp =>
+        sp.GetRequiredService<IOptions<UserDatabaseSettings>>().Value);
+            services.AddSingleton<UserService>();
             services.AddControllers();
         }
 
