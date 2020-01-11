@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WaterMelon_API.Models;
 using WaterMelon_API.Services;
@@ -22,11 +19,13 @@ namespace WaterMelon_API.Controllers
 
         // GET: api/Users
         [HttpGet]
+        [Authorize]
         public ActionResult<List<User>> Get() =>
            _userService.Get();
         
         // GET: api/Users/5
         [HttpGet("{id}", Name = "GetUser")]
+        [Authorize]
         public ActionResult<User> Get(string id)
         {
             var user = _userService.Get(id);
@@ -50,6 +49,7 @@ namespace WaterMelon_API.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
+        [Authorize]
         public IActionResult Update(string id, User userIn)
         {
             var user = _userService.Get(id);
@@ -66,6 +66,7 @@ namespace WaterMelon_API.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
+        [Authorize]
         public IActionResult Delete(string id)
         {
             var user = _userService.Get(id);
