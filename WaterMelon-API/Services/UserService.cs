@@ -24,6 +24,12 @@ namespace WaterMelon_API.Services
         public User Get(String id) =>
             _users.Find<User>(user => user.Id == id).FirstOrDefault();
 
+        public User GetFromIds(String username, String password)
+        {
+            User user = _users.Find<User>(user => user.Username.ToLower().Equals(username.ToLower()) && user.Password.ToLower().Equals(password.ToLower())).FirstOrDefault();
+            return user;
+        }
+
         public User Create(User user)
         {
             _users.InsertOne(user);
