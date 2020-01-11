@@ -7,6 +7,7 @@ using WaterMelon_API.Models;
 using Microsoft.Extensions.Options;
 using WaterMelon_API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Logging;
 
 namespace WaterMelon_API
 {
@@ -22,6 +23,8 @@ namespace WaterMelon_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true; // show error details
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
