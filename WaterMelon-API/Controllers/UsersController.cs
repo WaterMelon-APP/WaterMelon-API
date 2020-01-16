@@ -18,7 +18,7 @@ namespace WaterMelon_API.Controllers
         }
 
         // GET: api/Users
-        [HttpGet]
+        [HttpGet(Name = "GetAll")]
         [Authorize]
         public ActionResult<List<User>> Get() =>
            _userService.Get();
@@ -30,6 +30,19 @@ namespace WaterMelon_API.Controllers
         {
             var user = _userService.Get(id);
 
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
+
+        [HttpGet("{name},{password}")]
+        [Route("authenticate")]
+        public ActionResult<User> Authenticate(string username, string password)
+        {
+            User user = _userService.GetFromIds(username, password);
             if (user == null)
             {
                 return NotFound();
