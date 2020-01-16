@@ -22,5 +22,15 @@ namespace WaterMelon_API.Models
         public String Email { get; set; }
 
         public String Token { get; set; }
+
+        public String FirstName { get; set; } = "";
+
+        public String LastName { get; set; } = "";
+
+        public String Phone { get; set; } = "";
+
+        public DateTime Birthdate { get; set; }
+
+        public byte[] ProfilePicture { get; set; } = null;
     }
 }
