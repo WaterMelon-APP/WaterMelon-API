@@ -72,6 +72,27 @@ namespace WaterMelon_API.Controllers
                 return NotFound();
             }
 
+            if (userIn.Password == string.Empty)
+            {
+                return BadRequest("Password must not be empty");
+            }
+
+            if (!string.IsNullOrEmpty(userIn.Email))
+            {
+                try
+                {
+                    var addr = new System.Net.Mail.MailAddress(userIn.Email);
+                    if (addr.Address != userIn.Email)
+                    {
+                        return BadRequest("Invalid email address");
+                    }
+                }
+                catch
+                {
+                    return BadRequest("Invalid email address");
+                }
+            }
+
             _userService.Update(id, userIn);
 
             return NoContent();
