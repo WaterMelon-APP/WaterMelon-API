@@ -33,6 +33,12 @@ namespace WaterMelon_API
             services.AddSingleton<IUserDatabaseSettings>(sp => sp.GetRequiredService<IOptions<UserDatabaseSettings>>().Value);
             
             services.AddSingleton<UserService>();
+
+            services.Configure<EventDatabaseSettings>(Configuration.GetSection(nameof(EventDatabaseSettings)));
+
+            services.AddSingleton<IEventDatabaseSettings>(sp => sp.GetRequiredService<IOptions<EventDatabaseSettings>>().Value);
+
+            services.AddSingleton<EventService>();
             
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing());
 
