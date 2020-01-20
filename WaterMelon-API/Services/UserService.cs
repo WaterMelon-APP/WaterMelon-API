@@ -56,9 +56,10 @@ namespace WaterMelon_API.Services
             return user;
         }
 
-        public void Update(String id, User userIn)
+        public User Update(String id, User userIn)
         {
             _users.ReplaceOne(user => user.Id == id, userIn);
+            return Get(id);
         }
 
         public void Remove(User userIn)
