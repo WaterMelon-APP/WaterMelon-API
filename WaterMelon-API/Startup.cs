@@ -6,10 +6,7 @@ using Microsoft.Extensions.Hosting;
 using WaterMelon_API.Models;
 using Microsoft.Extensions.Options;
 using WaterMelon_API.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace WaterMelon_API
 {

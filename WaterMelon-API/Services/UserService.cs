@@ -5,10 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using WaterMelon_API.Models;
+using WaterMelon_API.Helpers;
 
 namespace WaterMelon_API.Services
 {
@@ -28,8 +27,10 @@ namespace WaterMelon_API.Services
 
         public List<User> Get() => _users.Find(user => true).ToList();
 
-        public User Get(String id) =>
-            _users.Find<User>(user => user.Id == id).FirstOrDefault();
+        public User Get(String id) {
+            User user = _users.Find<User>(user => user.Id == id).FirstOrDefault();
+            return user.WithoutPassword();
+        }
 
         public User GetFromIds(String username, String password)
         {
@@ -44,7 +45,7 @@ namespace WaterMelon_API.Services
                                              expires: DateTime.Now.AddMinutes(30),
                                              signingCredentials: credentials);
                 user.Token = new JwtSecurityTokenHandler().WriteToken(token);
-                return user;
+                return user.WithoutPassword();
             }
             return null;
         }
