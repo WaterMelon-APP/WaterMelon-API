@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WaterMelon_API.Models;
@@ -19,13 +20,11 @@ namespace WaterMelon_API.Controllers
 
         // GET: api/Users
         [HttpGet(Name = "GetAll")]
-        [Authorize]
         public ActionResult<List<User>> Get() =>
            _userService.Get();
         
         // GET: api/Users/5
         [HttpGet("{id}", Name = "GetUser")]
-        [Authorize]
         public ActionResult<User> Get(string id)
         {
             var user = _userService.Get(id);
@@ -38,16 +37,15 @@ namespace WaterMelon_API.Controllers
             return user;
         }
 
-        [HttpGet("{name},{password}")]
-        [Route("authenticate")]
-        public ActionResult<User> Authenticate(string username, string password)
+        [HttpPost(Name = "login")]
+        [Route("login")]
+        public ActionResult<User> Login([FromBody] LoginRequest request)
         {
-            User user = _userService.GetFromIds(username, password);
+            User user = _userService.GetFromIds(request.Username, request.Password);
             if (user == null)
             {
                 return NotFound();
             }
-
             return user;
         }
 
@@ -62,7 +60,6 @@ namespace WaterMelon_API.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        [Authorize]
         public IActionResult Update(string id, User userIn)
         {
             var user = _userService.Get(id);
@@ -79,7 +76,6 @@ namespace WaterMelon_API.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        [Authorize]
         public IActionResult Delete(string id)
         {
             var user = _userService.Get(id);

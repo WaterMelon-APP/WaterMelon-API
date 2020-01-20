@@ -1,0 +1,37 @@
+            //create claims details based on the user information
+            //var claims = new[] {
+            //        new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
+            //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            //        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+            //        new Claim("Id", user.Id.ToString()),
+            //        new Claim("Name", user.Name),
+            //        new Claim("UserName", user.Username),
+            //        new Claim("Password", user.Password),
+            //        new Claim("Email", user.Email)
+            //       };
+
+            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+
+            //var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            //var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
+
+            //user.Token = new JwtSecurityTokenHandler().WriteToken(token);
+
+
+
+            // startup.cs
+
+                        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = Configuration["Jwt:Audience"],
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                };
+            });

@@ -32,5 +32,7 @@ namespace WaterMelon_API.Models
         public DateTime Birthdate { get; set; }
 
         public byte[] ProfilePicture { get; set; } = null;
+
+        public String[] Events { get; set; }
     }
 }

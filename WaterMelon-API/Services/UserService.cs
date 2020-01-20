@@ -35,32 +35,18 @@ namespace WaterMelon_API.Services
         {
             User user = _users.Find<User>(user => user.Username == username).FirstOrDefault();
 
-            if (user.Password != password)
-                user = null;
-
-            //create claims details based on the user information
-            //var claims = new[] {
-            //        new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
-            //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            //        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-            //        new Claim("Id", user.Id.ToString()),
-            //        new Claim("Name", user.Name),
-            //        new Claim("UserName", user.Username),
-            //        new Claim("Password", user.Password),
-            //        new Claim("Email", user.Email)
-            //       };
-
-            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-
-            //var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            //var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
-
-            //user.Token = new JwtSecurityTokenHandler().WriteToken(token);
-
-            user.Token = "caca";
-
-            return user;
+            if (user.Password == password)
+            {
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["jwt:key"]));
+                var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(this._configuration["jwt:issuer"],
+                                             this._configuration["jwt:issuer"],
+                                             expires: DateTime.Now.AddMinutes(30),
+                                             signingCredentials: credentials);
+                user.Token = new JwtSecurityTokenHandler().WriteToken(token);
+                return user;
+            }
+            return null;
         }
 
         public User Create(User user)
