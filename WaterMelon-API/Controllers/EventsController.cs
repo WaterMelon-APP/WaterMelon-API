@@ -19,15 +19,19 @@ namespace WaterMelon_API.Controllers
 
         // GET: api/Events
         [HttpGet]
-        [Authorize]
-        public ActionResult<List<Event>> Get() => _eventService.Get();
+        public ActionResult<List<Event>> Get() => _eventService.GetAllEvents();
 
         // GET: api/Events/5
-        [Authorize]
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [Authorize]
+        public Event Get(int id)
         {
-            return "en travaux";
+            Event event = _eventService.getFromEventId(id);
+            if (event == null)
+            {
+                return NotFound();
+            }
+            return event;
         }
 
         [HttpGet]

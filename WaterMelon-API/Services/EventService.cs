@@ -26,9 +26,16 @@ namespace WaterMelon_API.Services
             _events = database.GetCollection<Event>(settings.EventsCollectionName);
         }
 
-        public List<Event> Get() => _events.Find(events => true).ToList();
+        public List<Event> GetAllEvents() 
+        {
+            var result = _events.Find(events => true).ToList();
+            return result;
+        } 
 
-        public Event Get(string id) => _events.Find<Event>(_event => _event.Id == id).FirstOrDefault();
+        public Event GetFromEventId(string id) {
+            var result = _events.Find<Event>(_event => _event.Id == id).FirstOrDefault();
+            return result;
+        } 
 
         public List<Event> GetFromName(string name) => _events.Find(_event => _event.Name.Contains(name)).ToList();
 

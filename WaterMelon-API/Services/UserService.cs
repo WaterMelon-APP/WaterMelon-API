@@ -34,8 +34,11 @@ namespace WaterMelon_API.Services
 
         public User GetFromIds(String username, String password)
         {
-            User user = _users.Find<User>(user => user.Username == username).FirstOrDefault();
-
+            User user = _users.Find<User>(user => user.Username.Equals(username)).FirstOrDefault();
+            if (user == null)
+            {
+                return null;
+            }
             if (user.Password == password)
             {
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["jwt:key"]));
@@ -52,8 +55,12 @@ namespace WaterMelon_API.Services
 
         public User Create(User user)
         {
-            _users.InsertOne(user);
-            return user;
+            User userLoaded = _users.Find<User>(userQuery => userQuery.Username.Equals(user.Username)).FirstOrDefault();
+            if (userLoaded == null) {
+                _users.InsertOne(user);
+                return user;
+            }
+            return null;
         }
 
         public User Update(String id, User userIn)

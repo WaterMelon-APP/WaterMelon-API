@@ -55,8 +55,10 @@ namespace WaterMelon_API.Controllers
         [Route("create")]
         public ActionResult<User> Create(User user)
         {
-            _userService.Create(user);
-
+            User createdUser =_userService.Create(user);
+            if (createdUser == null) {
+                return Unauthorized("User already exists.");
+            }
             return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
         }
 
@@ -93,7 +95,7 @@ namespace WaterMelon_API.Controllers
                 }
             }
 
-            _userService.Update(id, userIn);
+            return _userService.Update(id, userIn);
 
         }
 
