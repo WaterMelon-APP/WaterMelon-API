@@ -21,17 +21,16 @@ namespace WaterMelon_API.Controllers
         [HttpGet]
         public ActionResult<List<Event>> Get() => _eventService.GetAllEvents();
 
-        // GET: api/Events/5
         [HttpGet("{id}", Name = "Get")]
         [Authorize]
-        public Event Get(int id)
+        public ActionResult<Event> GetFromId(string id)
         {
-            Event event = _eventService.getFromEventId(id);
-            if (event == null)
+            var res = _eventService.GetFromEventId(id);
+            if (res == null)
             {
                 return NotFound();
             }
-            return event;
+            return res;
         }
 
         [HttpGet]
