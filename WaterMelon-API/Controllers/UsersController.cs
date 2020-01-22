@@ -45,7 +45,7 @@ namespace WaterMelon_API.Controllers
             User user = _userService.GetFromIds(request.Username, request.Password);
             if (user == null)
             {
-                return NotFound();
+                return BadRequest("Wrong combination username/password!");
             }
             return user;
         }
