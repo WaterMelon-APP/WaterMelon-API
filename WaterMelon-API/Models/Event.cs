@@ -27,5 +27,17 @@ namespace WaterMelon_API.Models
         public String[] Guests { get; set; }
 
         public Boolean Public { get; set; }
+
+        public Event(EventRequest eventRequest)
+        {
+            this.Id = eventRequest.Id;
+            this.Name = eventRequest.Name;
+            this.Owner = eventRequest.Owner;
+            this.Date = eventRequest.Date;
+            this.Address = eventRequest.Address;
+            this.ItemListId = eventRequest.ItemListId;
+            this.Guests = eventRequest.Guests;
+            this.Public = eventRequest.Public;
+        }
     }
 }

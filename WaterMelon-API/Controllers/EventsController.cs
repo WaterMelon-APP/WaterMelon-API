@@ -19,8 +19,10 @@ namespace WaterMelon_API.Controllers
 
         // GET: api/Events
         [HttpGet]
+        [Authorize]
         public ActionResult<List<Event>> Get() => _eventService.GetAllEvents();
 
+        // GET: api/Events/5
         [HttpGet("{id}", Name = "Get")]
         [Authorize]
         public ActionResult<Event> GetFromId(string id)
@@ -45,20 +47,44 @@ namespace WaterMelon_API.Controllers
 
         // POST: api/Events
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Authorize]
+        public ActionResult<Event> Post([FromBody] EventRequest eventRequest)
         {
+            Event ev = new Event(eventRequest);
+            Event createdEvent = _eventService.Create(ev);
+            if (createdEvent == null)
+            {
+                return Unauthorized("Event already exists.");
+            }
+            return CreatedAtRoute("Get", new { id = ev.Id }, ev);
         }
 
         // PUT: api/Events/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [Authorize]
+        public ActionResult<Event> Put(string id, [FromBody] EventRequest eventRequest)
         {
+            var res = _eventService.GetFromEventId(id);
+            if (res == null)
+            {
+                return NotFound();
+            }
+            return _eventService.UpdateEvent(id, eventRequest);
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Events/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Authorize]
+        public IActionResult Delete(string id)
         {
+            var res = _eventService.GetFromEventId(id);
+
+            if (res == null)
+            {
+                return NotFound();
+            }
+            _eventService.RemoveEventWithId(id);
+            return StatusCode(200);
         }
     }
 }

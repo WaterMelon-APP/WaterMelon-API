@@ -26,6 +26,17 @@ namespace WaterMelon_API.Services
             _events = database.GetCollection<Event>(settings.EventsCollectionName);
         }
 
+        public Event Create(Event ev)
+        {
+            Event eventLoaded = _events.Find<Event>(eventQuery => eventQuery.Name.Equals(ev.Name) && eventQuery.Owner.Equals(ev.Owner)).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                _events.InsertOne(ev);
+                return ev;
+            }
+            return null;
+        }
+
         public List<Event> GetAllEvents() 
         {
             var result = _events.Find(events => true).ToList();
@@ -41,5 +52,17 @@ namespace WaterMelon_API.Services
 
         public List<Event> GetFromUser(string id)
             => _events.Find(_event => _event.Guests.Contains(id)).ToList();
+
+        public Event UpdateEvent(string id, EventRequest eventRequest)
+        {
+            Event eventReceived = new Event(eventRequest);
+            _events.ReplaceOne(e => e.Id == id, eventReceived);
+            return GetFromEventId(id);
+        }
+
+        public void RemoveEventWithId(String id)
+        {
+            _events.DeleteOne(user => user.Id == id);
+        }
     }
 }
