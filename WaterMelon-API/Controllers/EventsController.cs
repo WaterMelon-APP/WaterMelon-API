@@ -23,7 +23,7 @@ namespace WaterMelon_API.Controllers
         public ActionResult<List<Event>> Get() => _eventService.GetAllEvents();
 
         // GET: api/Events/5
-        [HttpGet("{id}", Name = "GetEvent")]
+        [HttpGet("{id}", Name = "Get")]
         [Authorize]
         public ActionResult<Event> GetFromId(string id)
         {

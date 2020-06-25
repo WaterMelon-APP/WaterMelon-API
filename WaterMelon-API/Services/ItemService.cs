@@ -28,13 +28,16 @@ namespace WaterMelon_API.Services
 
         public Item Create(Item item)
         {
+            /*
             Item itemLoaded = _items.Find<Item>(itemQuery => itemQuery.Name.Equals(item.Name) && itemQuery.FromEvent.Equals(item.FromEvent)).FirstOrDefault();
             if (itemLoaded == null)
             {
                 _items.InsertOne(item);
                 return item;
             }
-            return null;
+            return null;*/
+            _items.InsertOne(item);
+            return item;
         }
 
         public List<Item> GetAllItems()
@@ -114,9 +117,9 @@ namespace WaterMelon_API.Services
             return GetFromItemId(id);
         }
 
-        public void RemoveItemWithId(String id)
+        public void RemoveItemWithId(String itemId)
         {
-            _items.DeleteOne(item => item.Id == id);
+            _items.DeleteOne(item => item.Id == itemId);
         }
     }
 }

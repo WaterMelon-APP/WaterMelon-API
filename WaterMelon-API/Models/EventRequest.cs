@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 
 namespace WaterMelon_API.Models
 {
@@ -27,6 +28,6 @@ namespace WaterMelon_API.Models
         public Boolean Public { get; set; }
 
         [FromQuery]
-        public String[] ItemList { get; set; }
+        public List<String> ItemList { get; set; }
     }
 }

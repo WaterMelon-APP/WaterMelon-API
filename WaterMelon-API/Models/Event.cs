@@ -26,7 +26,7 @@ namespace WaterMelon_API.Models
 
         public Boolean Public { get; set; }
 
-        public String[] ItemList { get; set; }
+        public List<String> ItemList { get; set; }
 
         public Event(EventRequest eventRequest)
         {

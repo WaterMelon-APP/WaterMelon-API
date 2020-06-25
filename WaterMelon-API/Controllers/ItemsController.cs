@@ -16,10 +16,12 @@ namespace WaterMelon_API.Controllers
     {
 
         private readonly ItemService _itemService;
+        private readonly EventService _eventService;
 
-        public ItemsController(ItemService itemService)
+        public ItemsController(ItemService itemService, EventService eventService)
         {
             _itemService = itemService;
+            _eventService = eventService;
         }
 
         // GET: api/Items
@@ -55,6 +57,12 @@ namespace WaterMelon_API.Controllers
             if (createdItem == null)
             {
                 return Unauthorized("Item already exists.");
+            }
+
+            Event tmp = _eventService.AddItemToList(createdItem.FromEvent, createdItem.Id);
+            if (tmp == null)
+            {
+                return NotFound("The related event wasn't found");
             }
             return CreatedAtRoute("Get", new { id = it.Id }, it);
         }
@@ -111,6 +119,7 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
+            _eventService.RemoveItemFromList(res.FromEvent, id);
             _itemService.RemoveItemWithId(id);
             return StatusCode(200);
         }
