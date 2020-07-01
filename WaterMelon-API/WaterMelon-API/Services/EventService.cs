@@ -60,6 +60,34 @@ namespace WaterMelon_API.Services
             return GetFromEventId(id);
         }
 
+        public Event AddItemToList(string eventId, string itemId)
+        {
+            Event modifiedEvent = GetFromEventId(eventId);
+
+            if (modifiedEvent == null)
+            {
+                return null;
+            }
+
+            modifiedEvent.ItemList.Add(itemId);
+            _events.ReplaceOne(e => e.Id == eventId, modifiedEvent);
+            return GetFromEventId(eventId);
+        }
+
+        public Event RemoveItemFromList(string eventId, string itemId)
+        {
+            Event modifiedEvent = GetFromEventId(eventId);
+
+            if (modifiedEvent == null)
+            {
+                return null;
+            }
+
+            modifiedEvent.ItemList.Remove(itemId);
+            _events.ReplaceOne(e => e.Id == eventId, modifiedEvent);
+            return GetFromEventId(eventId);
+        }
+
         public void RemoveEventWithId(String id)
         {
             _events.DeleteOne(user => user.Id == id);
