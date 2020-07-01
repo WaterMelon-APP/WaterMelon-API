@@ -37,7 +37,11 @@ namespace WaterMelon_API.Services
             User user = _users.Find<User>(user => user.Username.Equals(username)).FirstOrDefault();
             if (user == null)
             {
-                return null;
+                user = _users.Find<User>(user => user.Email.Equals(username)).FirstOrDefault();
+                if (user == null)
+                {
+                    return null;
+                }
             }
             if (user.Password == password)
             {
