@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WaterMelon_API.Models;
 using WaterMelon_API.Services;
+using WaterMelon_API;
 
 namespace WaterMelon_API.Controllers
 {
@@ -46,7 +47,8 @@ namespace WaterMelon_API.Controllers
             User user = _userService.GetFromIds(request.Username, request.Password);
             if (user == null)
             {
-                return BadRequest("Wrong combination username/password!");
+                return BadRequest(StringCipher.Encrypt(request.Password, "WaterMelonPasswd"));
+                // return BadRequest("Wrong combination username/password!");
             }
             return user;
         }
@@ -70,6 +72,10 @@ namespace WaterMelon_API.Controllers
                 }
             }
 
+            string encryptedPassword = StringCipher.Encrypt(user.Password, "WaterMelonPasswd");
+
+            user.Password = encryptedPassword;
+
             User createdUser =_userService.Create(user);
             if (createdUser == null) {
                 return Unauthorized("User already exists.");
@@ -92,6 +98,9 @@ namespace WaterMelon_API.Controllers
             if (userIn.Password == string.Empty)
             {
                 return BadRequest("Password must not be empty");
+            } else
+            {
+                userIn.Password = StringCipher.Encrypt(userIn.Password, "WaterMelonPasswd");
             }
 
             if (!string.IsNullOrEmpty(userIn.Email))

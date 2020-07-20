@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
+using WaterMelon_API;
 using WaterMelon_API.Models;
 using WaterMelon_API.Helpers;
 
@@ -43,7 +44,7 @@ namespace WaterMelon_API.Services
                     return null;
                 }
             }
-            if (user.Password == password)
+            if (StringCipher.Decrypt(user.Password, "WaterMelonPasswd") == password)
             {
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["jwt:key"]));
                 var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
