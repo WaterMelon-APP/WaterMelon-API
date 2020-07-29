@@ -40,6 +40,21 @@ namespace WaterMelon_API.Controllers
             return user;
         }
 
+        [HttpGet("byName/{username}", Name = "byName")]
+        [Route("users/byName")]
+        [Authorize]
+        public ActionResult<publicUser> byName(string username)
+        {
+            publicUser user = _userService.GetFromName(username);
+
+            if (user == null)
+            {
+                return BadRequest("This user does not exist.");
+            }
+
+            return user;
+        }
+
         [HttpPost(Name = "login")]
         [Route("login")]
         public ActionResult<User> Login([FromBody] LoginRequest request)
@@ -47,8 +62,7 @@ namespace WaterMelon_API.Controllers
             User user = _userService.GetFromIds(request.Username, request.Password);
             if (user == null)
             {
-                return BadRequest(StringCipher.Encrypt(request.Password, "WaterMelonPasswd"));
-                // return BadRequest("Wrong combination username/password!");
+                return BadRequest("Wrong combination username/password!");
             }
             return user;
         }

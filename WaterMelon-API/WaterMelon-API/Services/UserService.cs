@@ -33,6 +33,24 @@ namespace WaterMelon_API.Services
             return user.WithoutPassword();
         }
 
+        public publicUser GetFromName(String username)
+        {
+            User user = _users.Find<User>(user => user.Username.Equals(username)).FirstOrDefault();
+            if (user == null)
+            {
+                return null;
+            }
+
+            publicUser usr = new publicUser();
+            usr.Username = user.Username;
+            usr.Email = user.Email;
+            usr.FirstName = user.FirstName;
+            usr.LastName = user.LastName;
+            usr.Phone = user.Phone;
+            usr.ProfilePicture = user.ProfilePicture;
+            return usr;
+        }
+
         public User GetFromIds(String username, String password)
         {
             User user = _users.Find<User>(user => user.Username.Equals(username)).FirstOrDefault();
