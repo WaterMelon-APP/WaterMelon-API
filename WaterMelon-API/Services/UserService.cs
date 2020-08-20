@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
+using WaterMelon_API;
 using WaterMelon_API.Models;
 using WaterMelon_API.Helpers;
 
@@ -32,14 +33,36 @@ namespace WaterMelon_API.Services
             return user.WithoutPassword();
         }
 
-        public User GetFromIds(String username, String password)
+        public publicUser GetFromName(String username)
         {
             User user = _users.Find<User>(user => user.Username.Equals(username)).FirstOrDefault();
             if (user == null)
             {
                 return null;
             }
-            if (user.Password == password)
+
+            publicUser usr = new publicUser();
+            usr.Username = user.Username;
+            usr.Email = user.Email;
+            usr.FirstName = user.FirstName;
+            usr.LastName = user.LastName;
+            usr.Phone = user.Phone;
+            usr.ProfilePicture = user.ProfilePicture;
+            return usr;
+        }
+
+        public User GetFromIds(String username, String password)
+        {
+            User user = _users.Find<User>(user => user.Username.Equals(username)).FirstOrDefault();
+            if (user == null)
+            {
+                user = _users.Find<User>(user => user.Email.Equals(username)).FirstOrDefault();
+                if (user == null)
+                {
+                    return null;
+                }
+            }
+            if (StringCipher.Decrypt(user.Password, "WaterMelonPasswd") == password)
             {
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["jwt:key"]));
                 var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
