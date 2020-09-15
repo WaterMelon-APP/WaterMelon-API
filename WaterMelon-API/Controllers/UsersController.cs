@@ -27,7 +27,6 @@ namespace WaterMelon_API.Controllers
         
         // GET: api/Users/5
         [HttpGet("{id}", Name = "GetUser")]
-        [Authorize]
         public ActionResult<User> Get(string id)
         {
             var user = _userService.Get(id);
