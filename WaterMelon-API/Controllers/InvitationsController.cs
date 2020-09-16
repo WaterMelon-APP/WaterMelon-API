@@ -108,5 +108,33 @@ namespace WaterMelon_API.Controllers
             }
             return res;
         }
+
+        [HttpGet]
+        [Authorize]
+        [Route("RetrieveInvitationsFromGuest/{id}")]
+        //TODO: change to account name later
+        public ActionResult<List<Invitation>> RetrieveInvitationsFromGuest(string guestId)
+        {
+            var res = _invitationService.GetFromGuest(guestId);
+            if (res == null)
+            {
+                return NotFound();
+            }
+            return res;
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("RetrieveInvitationsFromGuest/{id}")]
+        //TODO: change to account name later
+        public ActionResult<List<Invitation>> RetrieveInvitationsFromSender(string senderId)
+        {
+            var res = _invitationService.GetFromSender(senderId);
+            if (res == null)
+            {
+                return NotFound();
+            }
+            return res;
+        }
     }
 }
