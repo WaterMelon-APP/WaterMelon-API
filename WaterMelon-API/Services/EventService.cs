@@ -120,5 +120,18 @@ namespace WaterMelon_API.Services
             _events.ReplaceOne(e => e.Id == id, eventLoaded);
             return GetFromEventId(id); 
         }
+
+        public Event AddGuestToEvent(String id, String guestId)
+        {
+            Event eventLoaded = _events.Find(e => e.Id == id).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                return null;
+            }
+            var guestsList = eventLoaded.Guests;
+            guestsList.Add(guestId);
+            _events.ReplaceOne(e => e.Id == id, eventLoaded);
+            return GetFromEventId(id);
+        }
     }
 }

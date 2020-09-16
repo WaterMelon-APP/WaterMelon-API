@@ -16,6 +16,7 @@ namespace WaterMelon_API.Controllers
     {
 
         private readonly InvitationService _invitationService;
+        private readonly EventService _eventService;
 
         public InvitationsController(InvitationService invitationService)
         {
@@ -91,6 +92,7 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
+            var result = _eventService.AddGuestToEvent(res.EventId, res.GuestId);
             return res;
         }
 

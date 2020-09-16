@@ -9,18 +9,15 @@ namespace WaterMelon_API.Services
     public class InvitationService
     {
         private readonly IMongoCollection<Invitation> _invitations;
-        private readonly IMongoCollection<Event> _events;
         private readonly IConfiguration _configuration;
 
         public InvitationService(IInvitationDatabaseSettings invSettings, IEventDatabaseSettings evSettings, IConfiguration config)
         {
             var client = new MongoClient(invSettings.ConnectionString);
             var invDatabase = client.GetDatabase(invSettings.DatabaseName);
-            var evDatabase = client.GetDatabase(evSettings.DatabaseName);
 
             _configuration = config;
             _invitations = invDatabase.GetCollection<Invitation>(invSettings.InvitationsCollectionName);
-            _events = evDatabase.GetCollection<Event>(evSettings.EventsCollectionName);
 
         }
 
@@ -77,16 +74,7 @@ namespace WaterMelon_API.Services
             if (invitationLoaded == null)
             {
                 return null;
-            }            
-            Event eventLoaded = _events.Find(e => e.Id == invitationLoaded.EventId).FirstOrDefault();
-            if (eventLoaded == null)
-            {
-                return null;
             }
-            var guestsList = eventLoaded.Guests;
-            guestsList.Add(invitationLoaded.GuestId);
-            eventLoaded.Guests = guestsList;
-            _events.ReplaceOne(e => e.Id == invitationLoaded.EventId, eventLoaded);
             invitationLoaded.Status = InvitationStatus.Accepted;
             _invitations.ReplaceOne(i => i.Id == invitationLoaded.Id, invitationLoaded);
             return GetFromInvitationId(id); 
