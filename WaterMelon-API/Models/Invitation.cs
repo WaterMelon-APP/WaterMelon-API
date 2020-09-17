@@ -9,9 +9,9 @@ namespace WaterMelon_API.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        public string SenderId { get; set; }
+        public string SenderName { get; set; }
 
-        public string GuestId { get; set; }
+        public string GuestName { get; set; }
 
         public string EventId { get; set; }
 
@@ -19,15 +19,15 @@ namespace WaterMelon_API.Models
 
         public Invitation(InvitationRequest request)
         {
-            this.SenderId = request.SenderId;
-            this.GuestId = request.GuestId;
+            this.SenderName = request.SenderName;
+            this.GuestName = request.GuestName;
             this.EventId = request.EventId;
         }
         public Invitation(string id, InvitationRequest request)
         {
             this.Id = id;
-            this.SenderId = request.SenderId;
-            this.GuestId = request.GuestId;
+            this.SenderName = request.SenderName;
+            this.GuestName = request.GuestName;
             this.Status = request.Status;
         }
     }

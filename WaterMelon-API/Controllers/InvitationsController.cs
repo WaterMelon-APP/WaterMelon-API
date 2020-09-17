@@ -18,6 +18,8 @@ namespace WaterMelon_API.Controllers
         private readonly InvitationService _invitationService;
         private readonly EventService _eventService;
 
+        private readonly UserService _userService;
+
         public InvitationsController(InvitationService invitationService)
         {
             _invitationService = invitationService;
@@ -92,7 +94,12 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
-            var result = _eventService.AddGuestToEvent(res.EventId, res.GuestId);
+            var user = _userService.GetFromName(res.GuestName);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var result = _eventService.AddGuestToEvent(res.EventId, user.Username);
             return res;
         }
 
@@ -111,11 +118,10 @@ namespace WaterMelon_API.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("RetrieveInvitationsFromGuest/{id}")]
-        //TODO: change to account name later
-        public ActionResult<List<Invitation>> RetrieveInvitationsFromGuest(string guestId)
+        [Route("RetrieveInvitationsFromGuest/{guestName}")]
+        public ActionResult<List<Invitation>> RetrieveInvitationsFromGuest(string guestName)
         {
-            var res = _invitationService.GetFromGuest(guestId);
+            var res = _invitationService.GetFromGuest(guestName);
             if (res == null)
             {
                 return NotFound();
@@ -125,11 +131,10 @@ namespace WaterMelon_API.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("RetrieveInvitationsFromGuest/{id}")]
-        //TODO: change to account name later
-        public ActionResult<List<Invitation>> RetrieveInvitationsFromSender(string senderId)
+        [Route("RetrieveInvitationsFromGuest/{senderName}")]
+        public ActionResult<List<Invitation>> RetrieveInvitationsFromSender(string senderName)
         {
-            var res = _invitationService.GetFromSender(senderId);
+            var res = _invitationService.GetFromSender(senderName);
             if (res == null)
             {
                 return NotFound();
