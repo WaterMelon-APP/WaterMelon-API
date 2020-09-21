@@ -28,6 +28,6 @@ namespace WaterMelon_API.Models
         public Boolean Public { get; set; }
 
         [FromQuery]
-        public List<String> ItemList { get; set; }
+        public String[] ItemList { get; set; }
     }
 }
