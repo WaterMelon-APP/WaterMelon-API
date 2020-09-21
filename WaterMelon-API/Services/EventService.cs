@@ -69,6 +69,10 @@ namespace WaterMelon_API.Services
                 return null;
             }
 
+            if (modifiedEvent.ItemList == null)
+            {
+                modifiedEvent.ItemList = new List<string>();
+            }
             modifiedEvent.ItemList.Add(itemId);
             _events.ReplaceOne(e => e.Id == eventId, modifiedEvent);
             return GetFromEventId(eventId);
