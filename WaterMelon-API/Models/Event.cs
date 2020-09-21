@@ -22,7 +22,7 @@ namespace WaterMelon_API.Models
 
         public String Address { get; set; }
 
-        public List<string> Guests { get; set; }
+        public String[] Guests { get; set; }
 
         public Boolean Public { get; set; }
 

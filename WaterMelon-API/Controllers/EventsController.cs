@@ -86,31 +86,5 @@ namespace WaterMelon_API.Controllers
             _eventService.RemoveEventWithId(id);
             return StatusCode(200);
         }
-
-        [HttpPost]
-        [Authorize]
-        [Route("RemoveGuest/{id}")]
-        public ActionResult<Event> RemoveGuest(string id, [FromBody] EventGuestRequest eventGuestRequest)
-        {
-            var res = _eventService.GetFromEventId(id);
-            if (res == null)
-            {
-                return NotFound();
-            }
-            return _eventService.RemoveGuestFromEvent(id, eventGuestRequest);
-        }
-
-        [HttpPost]
-        [Authorize]
-        [Route("AddGuest/{id}")]
-        public ActionResult<Event> AddGuest(string id, [FromBody] EventGuestRequest eventGuestRequest)
-        {
-            var res = _eventService.GetFromEventId(id);
-            if (res == null)
-            {
-                return NotFound();
-            }
-            return _eventService.AddGuestToEvent(id, eventGuestRequest);
-        }
     }
 }
