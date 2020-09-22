@@ -68,7 +68,7 @@ namespace WaterMelon_API.Services
                 var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var token = new JwtSecurityToken(this._configuration["jwt:issuer"],
                                              this._configuration["jwt:issuer"],
-                                             expires: DateTime.Now.AddMinutes(30),
+                                             expires: DateTime.Now.AddMinutes(90),
                                              signingCredentials: credentials);
                 user.Token = new JwtSecurityTokenHandler().WriteToken(token);
                 return user.WithoutPassword();
