@@ -17,6 +17,7 @@ namespace WaterMelon_API.Controllers
 
         private readonly InvitationService _invitationService;
         private readonly EventService _eventService;
+        private readonly NotificationService _notificationService;
 
         private readonly UserService _userService;
 
@@ -53,6 +54,8 @@ namespace WaterMelon_API.Controllers
             {
                 return Unauthorized("Invitation pending or accepted.");
             }
+            Notification notif = new Notification(createdInvitation);
+            _notificationService.Create(notif);
             return CreatedAtRoute("Get", new { id = createdInvitation.Id }, createdInvitation);
         }
 
