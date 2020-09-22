@@ -38,14 +38,31 @@ namespace WaterMelon_API.Models
             this.About = About;
         }
 
-        // TODO: Implement notification creation from invitation
         public Notification(Invitation invitation)
         {
             this.DataId = invitation.Id;
             this.Type = "invitation";
-            this.From = invitation.SenderName;
-            this.To = invitation.GuestName;
+            this.From = invitation.From;
+            this.To = invitation.To;
             this.EventId = invitation.EventId;
+            switch (invitation.Status)
+            {
+                case InvitationStatus.Accepted:
+                {
+                    this.About = "accepted";
+                    break;
+                }
+                case InvitationStatus.Refused:
+                {
+                    this.About = "refused";
+                    break;
+                }
+                default:
+                {
+                    this.About = "pending";
+                    break;
+                }
+            }
         }
     }
 }

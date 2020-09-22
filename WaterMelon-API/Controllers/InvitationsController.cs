@@ -18,7 +18,6 @@ namespace WaterMelon_API.Controllers
         private readonly InvitationService _invitationService;
         private readonly EventService _eventService;
         private readonly NotificationService _notificationService;
-
         private readonly UserService _userService;
 
         public InvitationsController(InvitationService invitationService)
@@ -54,6 +53,9 @@ namespace WaterMelon_API.Controllers
             {
                 return Unauthorized("Invitation pending or accepted.");
             }
+            Event ev = _eventService.GetFromEventId(invitationRequest.EventId);
+            ev.InvitationList.Add(createdInvitation.Id);
+            _eventService.UpdateEvent(ev);
             Notification notif = new Notification(createdInvitation);
             _notificationService.Create(notif);
             return CreatedAtRoute("Get", new { id = createdInvitation.Id }, createdInvitation);
@@ -97,12 +99,14 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
-            var user = _userService.GetFromName(res.GuestName);
+            var user = _userService.GetFromName(res.To);
             if (user == null)
             {
                 return NotFound();
             }
+            Notification notif = _notificationService.Create(new Notification(res));
             var result = _eventService.AddGuestToEvent(res.EventId, user.Username);
+            _eventService.RemoveInvitationFromEvent(res);
             return res;
         }
 
@@ -116,15 +120,17 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
+            Notification notif = _notificationService.Create(new Notification(res));
+            _eventService.RemoveInvitationFromEvent(res);
             return res;
         }
 
         [HttpGet]
         [Authorize]
         [Route("RetrieveInvitationsFromGuest/{guestName}")]
-        public ActionResult<List<Invitation>> RetrieveInvitationsFromGuest(string guestName)
+        public ActionResult<List<Invitation>> RetrieveInvitationsFromGuest(string to)
         {
-            var res = _invitationService.GetFromGuest(guestName);
+            var res = _invitationService.GetFromGuest(to);
             if (res == null)
             {
                 return NotFound();
@@ -135,9 +141,9 @@ namespace WaterMelon_API.Controllers
         [HttpGet]
         [Authorize]
         [Route("RetrieveInvitationsFromGuest/{senderName}")]
-        public ActionResult<List<Invitation>> RetrieveInvitationsFromSender(string senderName)
+        public ActionResult<List<Invitation>> RetrieveInvitationsFromSender(string from)
         {
-            var res = _invitationService.GetFromSender(senderName);
+            var res = _invitationService.GetFromSender(from);
             if (res == null)
             {
                 return NotFound();

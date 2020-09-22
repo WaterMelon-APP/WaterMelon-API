@@ -6,10 +6,10 @@ namespace WaterMelon_API.Models
     public class InvitationRequest
     {
         [FromQuery]
-        public String SenderName { get; set; }
+        public String From { get; set; }
 
         [FromQuery]
-        public String GuestName { get; set; }
+        public String To { get; set; }
 
         [FromQuery]
         public String EventId { get; set; }

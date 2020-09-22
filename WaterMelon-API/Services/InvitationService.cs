@@ -24,8 +24,8 @@ namespace WaterMelon_API.Services
         public Invitation Create(Invitation invitation)
         {
             // You can only send an invite if it didn't exist before or if the guest previously refused 
-            Invitation invitationLoaded = _invitations.Find<Invitation>(invitationQuery => invitationQuery.SenderName.Equals(invitation.SenderName) 
-                                                                && invitation.GuestName.Equals(invitation.GuestName)
+            Invitation invitationLoaded = _invitations.Find<Invitation>(invitationQuery => invitationQuery.From.Equals(invitation.From) 
+                                                                && invitation.To.Equals(invitation.To)
                                                                 && invitation.Status.Equals(InvitationStatus.Accepted) || 
                                                                 invitation.Status.Equals(InvitationStatus.Pending)).FirstOrDefault();
             if (invitationLoaded == null)
@@ -53,11 +53,11 @@ namespace WaterMelon_API.Services
             return result;
         } 
 
-        public List<Invitation> GetFromSender(string senderName)
-            => _invitations.Find(invitation => invitation.SenderName.Contains(senderName)).ToList();
+        public List<Invitation> GetFromSender(string from)
+            => _invitations.Find(invitation => invitation.From.Contains(from)).ToList();
 
-        public List<Invitation> GetFromGuest(string guestName)
-            => _invitations.Find(invitation => invitation.GuestName.Contains(guestName)).ToList();
+        public List<Invitation> GetFromGuest(string to)
+            => _invitations.Find(invitation => invitation.To.Contains(to)).ToList();
 
         public Invitation UpdateInvitation(string id, InvitationRequest invitationRequest)
         {

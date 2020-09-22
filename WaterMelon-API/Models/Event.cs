@@ -28,6 +28,8 @@ namespace WaterMelon_API.Models
 
         public List<String> ItemList { get; set; }
 
+        public List<String> InvitationList {get; set; }
+
         public Event(EventRequest eventRequest)
         {
             this.Id = eventRequest.Id;
@@ -38,6 +40,7 @@ namespace WaterMelon_API.Models
             this.Guests = eventRequest.Guests;
             this.Public = eventRequest.Public;
             this.ItemList = eventRequest.ItemList;
+            this.InvitationList = eventRequest.InvitationList;
         }
     }
 }

@@ -29,5 +29,8 @@ namespace WaterMelon_API.Models
 
         [FromQuery]
         public List<String> ItemList { get; set; }
+
+        [FromQuery]
+        public List<String> InvitationList { get; set; }
     }
 }
