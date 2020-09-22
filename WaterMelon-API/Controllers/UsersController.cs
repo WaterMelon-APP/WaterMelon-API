@@ -104,6 +104,19 @@ namespace WaterMelon_API.Controllers
             return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
         }
 
+        [HttpPost(Name = "forgotpasswd")]
+        [Route("forgotpasswd")]
+        public ActionResult<User> ForgotPasswd(ForgottenPasswdRequest fpr)
+        {
+            var user = _userService.CheckUsernameEmail(fpr.Username, fpr.Email);
+            
+            if (user == null)
+            {
+                return StatusCode(401, "Aucun utilisateur trouvé avec ces informations.");
+            }
+            return user;
+        }
+
         // PUT: api/Users/5
         [HttpPut("{id}")]
         [Authorize]
@@ -119,7 +132,7 @@ namespace WaterMelon_API.Controllers
             if (userIn.Password == string.Empty)
             {
                 return BadRequest("Password must not be empty");
-            } else
+            } else if (userIn.Password != null)
             {
                 userIn.Password = StringCipher.Encrypt(userIn.Password, "WaterMelonPasswd");
             }
@@ -145,7 +158,17 @@ namespace WaterMelon_API.Controllers
                 }
             }
 
-            return _userService.Update(id, userIn);
+            var props = typeof(User).GetProperties();
+
+            foreach (var prop in props)
+            {
+                if (prop.GetValue(userIn) != null)
+                {
+                    prop.SetValue(user, prop.GetValue(userIn));
+                }
+            }
+
+            return _userService.Update(id, user);
 
         }
 

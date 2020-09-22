@@ -33,6 +33,23 @@ namespace WaterMelon_API.Services
             return user.WithoutPassword();
         }
 
+        public User CheckUsernameEmail(string username, string email)
+        {
+            User user = _users.Find<User>(user => user.Username.Equals(username) && user.Email.Equals(email)).FirstOrDefault();
+            if (user == null)
+            {
+                return null;
+            }
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["jwt:key"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(this._configuration["jwt:issuer"],
+                                             this._configuration["jwt:issuer"],
+                                             expires: DateTime.Now.AddMinutes(30),
+                                             signingCredentials: credentials);
+            user.Token = new JwtSecurityTokenHandler().WriteToken(token);
+            return user;
+        }
+
         public publicUser GetFromName(String username)
         {
             User user = _users.Find<User>(user => user.Username.Equals(username)).FirstOrDefault();
