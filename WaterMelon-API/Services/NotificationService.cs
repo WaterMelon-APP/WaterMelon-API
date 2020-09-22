@@ -50,7 +50,8 @@ namespace WaterMelon_API.Services
         public Notification Create(Notification notification)
         {
             Notification notificationLoaded = _notifications.Find<Notification>(notif => notif.Id == notification.Id).FirstOrDefault();
-            if (notificationLoaded == null) {
+            if (notificationLoaded == null)
+            {
                 _notifications.InsertOne(notification);
                 return notification;
             }

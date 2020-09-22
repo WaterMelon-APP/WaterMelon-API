@@ -56,8 +56,7 @@ namespace WaterMelon_API.Controllers
             Event ev = _eventService.GetFromEventId(invitationRequest.EventId);
             ev.InvitationList.Add(createdInvitation.Id);
             _eventService.UpdateEvent(ev);
-            Notification notif = new Notification(createdInvitation);
-            _notificationService.Create(notif);
+            _notificationService.Create(new Notification(createdInvitation));
             return CreatedAtRoute("Get", new { id = createdInvitation.Id }, createdInvitation);
         }
 
@@ -107,6 +106,7 @@ namespace WaterMelon_API.Controllers
             Notification notif = _notificationService.Create(new Notification(res));
             var result = _eventService.AddGuestToEvent(res.EventId, user.Username);
             _eventService.RemoveInvitationFromEvent(res);
+            _invitationService.RemoveInvitationWithId(id);
             return res;
         }
 
@@ -122,6 +122,7 @@ namespace WaterMelon_API.Controllers
             }
             Notification notif = _notificationService.Create(new Notification(res));
             _eventService.RemoveInvitationFromEvent(res);
+            _invitationService.RemoveInvitationWithId(id);
             return res;
         }
 

@@ -11,14 +11,13 @@ namespace WaterMelon_API.Services
         private readonly IMongoCollection<Invitation> _invitations;
         private readonly IConfiguration _configuration;
 
-        public InvitationService(IInvitationDatabaseSettings invSettings, IEventDatabaseSettings evSettings, IConfiguration config)
+        public InvitationService(IInvitationDatabaseSettings invSettings, IConfiguration config)
         {
             var client = new MongoClient(invSettings.ConnectionString);
             var invDatabase = client.GetDatabase(invSettings.DatabaseName);
 
             _configuration = config;
             _invitations = invDatabase.GetCollection<Invitation>(invSettings.InvitationsCollectionName);
-
         }
 
         public Invitation Create(Invitation invitation)
