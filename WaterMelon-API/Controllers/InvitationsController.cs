@@ -20,7 +20,8 @@ namespace WaterMelon_API.Controllers
         private readonly NotificationService _notificationService;
         private readonly UserService _userService;
 
-        public InvitationsController(InvitationService invitationService)
+        public InvitationsController(InvitationService invitationService, EventService eventService, NotificationService notificationService,
+            UserService userService)
         {
             _invitationService = invitationService;
         }

@@ -16,7 +16,6 @@ namespace WaterMelon_API.Controllers
     {
 
         private readonly NotificationService _notificationService;
-        private readonly EventService _eventService;
 
         public NotificationsController(NotificationService notificationService)
         {
