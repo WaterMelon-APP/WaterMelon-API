@@ -15,7 +15,7 @@ namespace WaterMelon_API.Services
             var database = client.GetDatabase(settings.DatabaseName);
 
             _configuration = config;
-            _profilePictures = database.GetCollection<ProfilePicture>("ProfilePictures");
+            _profilePictures = database.GetCollection<ProfilePicture>(settings.ProfilePicturesCollectionName);
         }
 
         public ProfilePicture Create(ProfilePicture pfp)

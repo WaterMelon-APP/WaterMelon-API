@@ -16,13 +16,13 @@ namespace WaterMelon_API.Services
         private readonly IMongoCollection<Notification> _notifications;
         private readonly IConfiguration _configuration;
 
-        public NotificationService(IUserDatabaseSettings settings, IConfiguration config)
+        public NotificationService(INotificationDatabaseSettings settings, IConfiguration config)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
             _configuration = config;
-            _notifications = database.GetCollection<Notification>(settings.UsersCollectionName);
+            _notifications = database.GetCollection<Notification>(settings.NotificationsCollectionName);
         }
 
         public List<Notification> Get() => _notifications.Find(notif => true).ToList();
