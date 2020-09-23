@@ -48,17 +48,23 @@ namespace WaterMelon_API.Controllers
         [Route("upload")]
         public ActionResult<ProfilePicture> Upload([FromBody] ProfilePictureRequest request)
         {
-            byte[] binaryContent = System.IO.File.ReadAllBytes(request.Filename);
-            if (binaryContent == null)
+            try {
+                byte[] binaryContent = System.IO.File.ReadAllBytes(request.Filename);
+
+                if (binaryContent == null)
+                {
+                    return BadRequest("Error with file!");
+                }
+                ProfilePicture newPic = _profilePictureService.Create(new ProfilePicture(request.UserId, binaryContent));
+                if (newPic == null)
+                {
+                    return BadRequest("Error with file!2");
+                }
+                return newPic;
+            } catch (System.IO.FileNotFoundException e)
             {
-                return BadRequest("Error with file!");
+                return BadRequest(e);
             }
-            ProfilePicture newPic = _profilePictureService.Create(new ProfilePicture(request.UserId, binaryContent));
-            if (newPic == null)
-            {
-                return BadRequest("Error with file!");
-            }
-            return newPic;
         }
 
         [HttpPost]
