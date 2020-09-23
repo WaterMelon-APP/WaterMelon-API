@@ -51,7 +51,7 @@ namespace WaterMelon_API.Controllers
             Invitation createdInvitation = _invitationService.Create(new Invitation(invitationRequest));
             if (createdInvitation == null)
             {
-                return Unauthorized("Invitation pending or accepted.");
+                return Unauthorized("Cet utilisateur a déjà été invité.");
             }
             Event ev = _eventService.GetFromEventId(invitationRequest.EventId);
             if (ev.InvitationList == null)
