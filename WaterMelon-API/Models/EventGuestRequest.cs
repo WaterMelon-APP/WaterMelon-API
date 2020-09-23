@@ -6,6 +6,6 @@ namespace WaterMelon_API.Models
     public class EventGuestRequest
     {
         [FromQuery]
-        public String GuestId { get; set; }
+        public String GuestName { get; set; }
     }
 }

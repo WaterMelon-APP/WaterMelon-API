@@ -40,7 +40,7 @@ namespace WaterMelon_API.Controllers
             return res;
         }
 
-        [HttpGet("{id}", Name = "GetForRecipient")]
+        [HttpGet("GetForRecipient/{id}", Name = "GetForRecipient")]
         [Authorize]
         public ActionResult<List<Notification>> GetForRecipient(string id)
         {
@@ -52,7 +52,7 @@ namespace WaterMelon_API.Controllers
             return res;
         }
 
-        [HttpGet("{id}", Name = "GetForSender")]
+        [HttpGet("GetForSender/{id}", Name = "GetForSender")]
         [Authorize]
         public ActionResult<List<Notification>> GetForSender(string id)
         {

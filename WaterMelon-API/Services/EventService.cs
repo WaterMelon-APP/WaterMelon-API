@@ -107,7 +107,7 @@ namespace WaterMelon_API.Services
                 return null;
             }
             // remove
-            var guestsList = eventLoaded.Guests.Where(s => s != eventGuestRequest.GuestId).ToList();
+            var guestsList = eventLoaded.Guests.Where(s => s != eventGuestRequest.GuestName).ToList();
             eventLoaded.Guests = guestsList;
             _events.ReplaceOne(e => e.Id == id, eventLoaded);
             return GetFromEventId(id);
@@ -121,7 +121,7 @@ namespace WaterMelon_API.Services
                 return null;
             }
             var guestsList = eventLoaded.Guests;
-            guestsList.Add(eventGuestRequest.GuestId);
+            guestsList.Add(eventGuestRequest.GuestName);
             eventLoaded.Guests = guestsList;
             _events.ReplaceOne(e => e.Id == id, eventLoaded);
             return GetFromEventId(id); 

@@ -54,6 +54,10 @@ namespace WaterMelon_API.Controllers
                 return Unauthorized("Invitation pending or accepted.");
             }
             Event ev = _eventService.GetFromEventId(invitationRequest.EventId);
+            if (ev.InvitationList == null)
+            {
+                ev.InvitationList = new List<string>();
+            }
             ev.InvitationList.Add(createdInvitation.Id);
             _eventService.UpdateEvent(ev);
             _notificationService.Create(new Notification(createdInvitation));
@@ -98,7 +102,7 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
-            var user = _userService.GetFromName(res.To);
+            var user = _userService.Get(res.To);
             if (user == null)
             {
                 return NotFound();
@@ -126,9 +130,9 @@ namespace WaterMelon_API.Controllers
             return res;
         }
 
-        [HttpGet]
+        [HttpGet("RetrieveInvitationsFromGuest/{guestName}", Name = "RetrieveInvitationsFromGuest")]
         [Authorize]
-        [Route("RetrieveInvitationsFromGuest/{guestName}")]
+        [Route("RetrieveInvitationsFromGuest/")]
         public ActionResult<List<Invitation>> RetrieveInvitationsFromGuest(string to)
         {
             var res = _invitationService.GetFromGuest(to);
@@ -141,7 +145,7 @@ namespace WaterMelon_API.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("RetrieveInvitationsFromGuest/{senderName}")]
+        [Route("RetrieveInvitationsFromSender/{senderName}")]
         public ActionResult<List<Invitation>> RetrieveInvitationsFromSender(string from)
         {
             var res = _invitationService.GetFromSender(from);

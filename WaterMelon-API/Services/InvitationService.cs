@@ -48,8 +48,8 @@ namespace WaterMelon_API.Services
         } 
 
         public Invitation GetFromInvitationId(string id) {
-            var result = _invitations.Find<Invitation>(_invitation => _invitation.Id == id).FirstOrDefault();
-            return result;
+            Invitation invitation = _invitations.Find<Invitation>(inv => inv.Id == id).FirstOrDefault();
+            return invitation;
         } 
 
         public List<Invitation> GetFromSender(string from)
