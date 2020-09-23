@@ -7,6 +7,7 @@ namespace WaterMelon_API.Models
 {
     public class publicUser
     {
+        public String Id { get; set; }
         public String Username { get; set; }
 
         public String Email { get; set; }

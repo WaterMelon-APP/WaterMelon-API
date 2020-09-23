@@ -59,6 +59,7 @@ namespace WaterMelon_API.Services
             }
 
             publicUser usr = new publicUser();
+            usr.Id = user.Id;
             usr.Username = user.Username;
             usr.Email = user.Email;
             usr.FirstName = user.FirstName;
