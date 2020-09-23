@@ -60,6 +60,12 @@ namespace WaterMelon_API.Services
             return GetFromEventId(id);
         }
 
+        public Event UpdateEvent(Event ev)
+        {
+            _events.ReplaceOne(e => e.Id == ev.Id, ev);
+            return ev;
+        }
+
         public Event AddItemToList(string eventId, string itemId)
         {
             Event modifiedEvent = GetFromEventId(eventId);
@@ -132,6 +138,32 @@ namespace WaterMelon_API.Services
             guestsList.Add(guestId);
             _events.ReplaceOne(e => e.Id == id, eventLoaded);
             return GetFromEventId(id);
+        }
+
+        public Event AddInvitationToEvent(Invitation invitation)
+        {
+            Event eventLoaded = _events.Find(e => e.Id == invitation.EventId).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                return null;
+            }
+            var invitationsList = eventLoaded.InvitationList;
+            invitationsList.Add(invitation.Id);
+            _events.ReplaceOne(e => e.Id == eventLoaded.Id, eventLoaded);
+            return GetFromEventId(eventLoaded.Id);
+        }
+
+        public Event RemoveInvitationFromEvent(Invitation invitation)
+        {
+            Event eventLoaded = _events.Find(e => e.Id == invitation.EventId).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                return null;
+            }
+            var invitationsList = eventLoaded.InvitationList;
+            invitationsList.Remove(invitation.Id);
+            _events.ReplaceOne(e => e.Id == eventLoaded.Id, eventLoaded);
+            return GetFromEventId(eventLoaded.Id);
         }
     }
 }
