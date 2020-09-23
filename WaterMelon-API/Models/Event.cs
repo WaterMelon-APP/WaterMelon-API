@@ -22,11 +22,12 @@ namespace WaterMelon_API.Models
 
         public String Address { get; set; }
 
-        public String[] Guests { get; set; }
+        public List<string> Guests { get; set; }
 
         public Boolean Public { get; set; }
 
         public List<String> ItemList { get; set; }
+        public List<String> InvitationList {get; set; }
 
         public Event(EventRequest eventRequest)
         {
@@ -38,6 +39,7 @@ namespace WaterMelon_API.Models
             this.Guests = eventRequest.Guests;
             this.Public = eventRequest.Public;
             this.ItemList = eventRequest.ItemList;
+            this.InvitationList = eventRequest.InvitationList;
         }
     }
 }

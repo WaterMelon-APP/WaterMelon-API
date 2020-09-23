@@ -59,6 +59,11 @@ namespace WaterMelon_API.Services
             _events.ReplaceOne(e => e.Id == id, eventReceived);
             return GetFromEventId(id);
         }
+        public Event UpdateEvent(Event ev)
+        {
+            _events.ReplaceOne(e => e.Id == ev.Id, ev);
+            return ev;
+        }
 
         public Event AddItemToList(string eventId, string itemId)
         {
@@ -73,6 +78,7 @@ namespace WaterMelon_API.Services
             {
                 modifiedEvent.ItemList = new List<string>();
             }
+
             modifiedEvent.ItemList.Add(itemId);
             _events.ReplaceOne(e => e.Id == eventId, modifiedEvent);
             return GetFromEventId(eventId);
@@ -95,6 +101,73 @@ namespace WaterMelon_API.Services
         public void RemoveEventWithId(String id)
         {
             _events.DeleteOne(user => user.Id == id);
+        }
+
+        public Event RemoveGuestFromEvent(String id, EventGuestRequest eventGuestRequest)
+        {
+            Event eventLoaded = _events.Find(e => e.Id == id).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                return null;
+            }
+            // remove
+            var guestsList = eventLoaded.Guests.Where(s => s != eventGuestRequest.GuestName).ToList();
+            eventLoaded.Guests = guestsList;
+            _events.ReplaceOne(e => e.Id == id, eventLoaded);
+            return GetFromEventId(id);
+        }
+
+        public Event AddGuestToEvent(String id, EventGuestRequest eventGuestRequest) 
+        { 
+            Event eventLoaded = _events.Find(e => e.Id == id).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                return null;
+            }
+            var guestsList = eventLoaded.Guests;
+            guestsList.Add(eventGuestRequest.GuestName);
+            eventLoaded.Guests = guestsList;
+            _events.ReplaceOne(e => e.Id == id, eventLoaded);
+            return GetFromEventId(id); 
+        }
+
+        public Event AddGuestToEvent(String id, String guestId)
+        {
+            Event eventLoaded = _events.Find(e => e.Id == id).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                return null;
+            }
+            var guestsList = eventLoaded.Guests;
+            guestsList.Add(guestId);
+            _events.ReplaceOne(e => e.Id == id, eventLoaded);
+            return GetFromEventId(id);
+        }
+
+        public Event AddInvitationToEvent(Invitation invitation)
+        {
+            Event eventLoaded = _events.Find(e => e.Id == invitation.EventId).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                return null;
+            }
+            var invitationsList = eventLoaded.InvitationList;
+            invitationsList.Add(invitation.Id);
+            _events.ReplaceOne(e => e.Id == eventLoaded.Id, eventLoaded);
+            return GetFromEventId(eventLoaded.Id);
+        }
+
+        public Event RemoveInvitationFromEvent(Invitation invitation)
+        {
+            Event eventLoaded = _events.Find(e => e.Id == invitation.EventId).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                return null;
+            }
+            var invitationsList = eventLoaded.InvitationList;
+            invitationsList.Remove(invitation.Id);
+            _events.ReplaceOne(e => e.Id == eventLoaded.Id, eventLoaded);
+            return GetFromEventId(eventLoaded.Id);
         }
     }
 }

@@ -22,12 +22,15 @@ namespace WaterMelon_API.Models
         public String Address { get; set; }
 
         [FromQuery]
-        public String[] Guests { get; set; }
+        public List<string> Guests { get; set; }
 
         [FromQuery]
         public Boolean Public { get; set; }
 
         [FromQuery]
         public List<String> ItemList { get; set; }
+
+        [FromQuery]
+        public List<String> InvitationList { get; set; }
     }
 }

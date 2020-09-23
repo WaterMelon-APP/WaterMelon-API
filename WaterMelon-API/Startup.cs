@@ -40,6 +40,18 @@ namespace WaterMelon_API
             services.AddSingleton<IItemDatabaseSettings>(sp => sp.GetRequiredService<IOptions<ItemDatabaseSettings>>().Value);
             services.AddSingleton<ItemService>();
 
+            services.Configure<ProfilePictureDatabaseSettings>(Configuration.GetSection(nameof(ProfilePictureDatabaseSettings)));
+            services.AddSingleton<IProfilePictureDatabaseSettings>(sp => sp.GetRequiredService<IOptions<ProfilePictureDatabaseSettings>>().Value);
+            services.AddSingleton<ProfilePictureService>();
+
+            services.Configure<NotificationDatabaseSettings>(Configuration.GetSection(nameof(NotificationDatabaseSettings)));
+            services.AddSingleton<INotificationDatabaseSettings>(sp => sp.GetRequiredService<IOptions<NotificationDatabaseSettings>>().Value);
+            services.AddSingleton<NotificationService>();
+
+            services.Configure<InvitationDatabaseSettings>(Configuration.GetSection(nameof(InvitationDatabaseSettings)));
+            services.AddSingleton<IInvitationDatabaseSettings>(sp => sp.GetRequiredService<IOptions<InvitationDatabaseSettings>>().Value);
+            services.AddSingleton<InvitationService>();
+
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing());
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
