@@ -51,7 +51,7 @@ namespace WaterMelon_API.Controllers
             Invitation createdInvitation = _invitationService.Create(new Invitation(invitationRequest));
             if (createdInvitation == null)
             {
-                return Unauthorized("Cet utilisateur a d�j� �t� invit�.");
+                return Unauthorized("Cet utilisateur a deja ete invite.");
             }
             Event ev = _eventService.GetFromEventId(invitationRequest.EventId);
             if (ev.InvitationList == null)
@@ -97,21 +97,26 @@ namespace WaterMelon_API.Controllers
         [Route("AcceptInvitation/{id}")]
         public ActionResult<Invitation> AcceptInvitation(string id)
         {
-            var res = _invitationService.AcceptInvitation(id);
-            if (res == null)
+            Invitation invitation = _invitationService.GetFromInvitationId(id);
+            if (invitation == null)
             {
-                return NotFound();
+                return StatusCode(404, "Invitation non trouvee");
             }
+            if (invitation.Status != 0)
+            {
+                return StatusCode(400, "Impossible d'accepter l'invitation car elle n'est pas en attente.");
+            }
+            var res = _invitationService.AcceptInvitation(id);            
             var user = _userService.GetFromName(res.To);
             if (user == null)
             {
-                return NotFound();
+                return StatusCode(404, "Utilisateur non trouve.");
             }
             Notification notif = _notificationService.Create(new Notification(res));
             var result = _eventService.AddGuestToEvent(res.EventId, user.Username);
             _eventService.RemoveInvitationFromEvent(res);
             _invitationService.RemoveInvitationWithId(id);
-            return StatusCode(200, "ok");
+            return StatusCode(200, "Invitation acceptee.");
         }
 
         [HttpPost]
@@ -119,15 +124,20 @@ namespace WaterMelon_API.Controllers
         [Route("RefuseInvitation/{id}")]
         public ActionResult<Invitation> RefuseInvitation(string id)
         {
-            var res = _invitationService.RefuseInvitation(id);
-            if (res == null)
+            Invitation invitation = _invitationService.GetFromInvitationId(id);
+            if (invitation == null)
             {
-                return NotFound();
+                return StatusCode(404, "Invitation non trouvee");
             }
+            if (invitation.Status != 0)
+            {
+                return StatusCode(400, "Impossible d'accepter l'invitation car elle n'est pas en attente.");
+            }
+            var res = _invitationService.RefuseInvitation(id);
             Notification notif = _notificationService.Create(new Notification(res));
             _eventService.RemoveInvitationFromEvent(res);
             _invitationService.RemoveInvitationWithId(id);
-            return StatusCode(200, "ok");
+            return StatusCode(200, "Invitation refusee.");
         }
 
         [HttpGet("RetrieveInvitationsTo", Name = "RetrieveInvitationsTo")]
