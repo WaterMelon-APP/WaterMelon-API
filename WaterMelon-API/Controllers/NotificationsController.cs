@@ -40,8 +40,9 @@ namespace WaterMelon_API.Controllers
             return res;
         }
 
-        [HttpGet("GetNotificationsFrom/{username}", Name = "GetNotificationsFrom")]
+        [HttpGet("GetNotificationsFrom", Name = "GetNotificationsFrom")]
         [Authorize]
+        [Route("GetNotificationsFrom/{from}")]
         public ActionResult<List<Notification>> GetNotificationsFrom(string from)
         {
             var res = _notificationService.GetFrom(from);
@@ -52,8 +53,9 @@ namespace WaterMelon_API.Controllers
             return res;
         }
 
-        [HttpGet("GetNotificationsTo/{username}", Name = "GetNotificationsTo")]
+        [HttpGet("GetNotificationsTo", Name = "GetNotificationsTo")]
         [Authorize]
+        [Route("GetNotificationsTo/{to}")]
         public ActionResult<List<Notification>> GetNotificationsTo(string to)
         {
             var res = _notificationService.GetTo(to);
