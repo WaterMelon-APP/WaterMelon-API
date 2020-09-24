@@ -28,6 +28,7 @@ namespace WaterMelon_API.Models
             this.Id = id;
             this.From = request.From;
             this.To = request.To;
+            this.EventId = request.EventId;
             this.Status = request.Status;
         }
     }
