@@ -111,7 +111,7 @@ namespace WaterMelon_API.Controllers
             var result = _eventService.AddGuestToEvent(res.EventId, user.Username);
             _eventService.RemoveInvitationFromEvent(res);
             _invitationService.RemoveInvitationWithId(id);
-            return StatusCode(200);
+            return StatusCode(200, "ok");
         }
 
         [HttpPost]
@@ -127,7 +127,7 @@ namespace WaterMelon_API.Controllers
             Notification notif = _notificationService.Create(new Notification(res));
             _eventService.RemoveInvitationFromEvent(res);
             _invitationService.RemoveInvitationWithId(id);
-            return StatusCode(200);
+            return StatusCode(200, "ok");
         }
 
         [HttpGet("RetrieveInvitationsTo", Name = "RetrieveInvitationsTo")]
