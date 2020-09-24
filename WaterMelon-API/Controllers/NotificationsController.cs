@@ -40,11 +40,12 @@ namespace WaterMelon_API.Controllers
             return res;
         }
 
-        [HttpGet("GetForRecipient/{id}", Name = "GetForRecipient")]
+        [HttpGet("GetNotificationsFrom", Name = "GetNotificationsFrom")]
         [Authorize]
-        public ActionResult<List<Notification>> GetForRecipient(string id)
+        [Route("GetNotificationsFrom/{from}")]
+        public ActionResult<List<Notification>> GetNotificationsFrom(string from)
         {
-            var res = _notificationService.GetForRecipient(id);
+            var res = _notificationService.GetFrom(from);
             if (res == null)
             {
                 return NotFound();
@@ -52,11 +53,12 @@ namespace WaterMelon_API.Controllers
             return res;
         }
 
-        [HttpGet("GetForSender/{id}", Name = "GetForSender")]
+        [HttpGet("GetNotificationsTo", Name = "GetNotificationsTo")]
         [Authorize]
-        public ActionResult<List<Notification>> GetForSender(string id)
+        [Route("GetNotificationsTo/{to}")]
+        public ActionResult<List<Notification>> GetNotificationsTo(string to)
         {
-            var res = _notificationService.GetForSender(id);
+            var res = _notificationService.GetTo(to);
             if (res == null)
             {
                 return NotFound();
@@ -92,7 +94,6 @@ namespace WaterMelon_API.Controllers
         public IActionResult Delete(string id)
         {
             var res = _notificationService.GetFromId(id);
-
             if (res == null)
             {
                 return NotFound();
