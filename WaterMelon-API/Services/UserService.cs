@@ -30,7 +30,7 @@ namespace WaterMelon_API.Services
 
         public User Get(String id) {
             User user = _users.Find<User>(user => user.Id == id).FirstOrDefault();
-            return user.WithoutPassword();
+            return user;
         }
 
         public User CheckUsernameEmail(string username, string email)
