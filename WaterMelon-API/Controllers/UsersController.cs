@@ -188,5 +188,30 @@ namespace WaterMelon_API.Controllers
 
             return StatusCode(200);
         }
+
+        // POST: api/Users/uploadpicture
+        [HttpPost(Name = "uploadpicture")]
+        [Route("uploadpicture")]
+        public ActionResult<User> UploadPicture([FromBody] ProfilePictureRequest request)
+        {
+            try {
+                byte[] binaryContent = System.IO.File.ReadAllBytes(request.Filename);
+                if (binaryContent == null)
+                {
+                    return BadRequest("Error with file!");
+                }
+                var user = _userService.Get(request.UserId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                user.ProfilePicture = binaryContent;
+                _userService.Update(request.UserId, user);
+                return user;
+            } catch (System.IO.FileNotFoundException e)
+            {
+                return BadRequest(e);
+            }
+        }
     }
 }

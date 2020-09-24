@@ -131,7 +131,7 @@ namespace WaterMelon_API.Services
             return GetFromEventId(id); 
         }
 
-        public Event AddGuestToEvent(String id, String guestId)
+        public Event AddGuestToEvent(String id, String guestUsername)
         {
             Event eventLoaded = _events.Find(e => e.Id == id).FirstOrDefault();
             if (eventLoaded == null)
@@ -139,7 +139,7 @@ namespace WaterMelon_API.Services
                 return null;
             }
             var guestsList = eventLoaded.Guests;
-            guestsList.Add(guestId);
+            guestsList.Add(guestUsername);
             _events.ReplaceOne(e => e.Id == id, eventLoaded);
             return GetFromEventId(id);
         }
