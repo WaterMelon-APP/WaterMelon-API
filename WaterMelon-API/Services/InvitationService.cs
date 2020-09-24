@@ -53,10 +53,17 @@ namespace WaterMelon_API.Services
         } 
 
         public List<Invitation> GetFrom(string from)
-            => _invitations.Find(invitation => invitation.From.Contains(from)).ToList();
+        {
+            List<Invitation> invList = _invitations.Find(i => i.From.Equals(from)).ToList();
+            return invList;
+        }
+            
 
         public List<Invitation> GetTo(string to)
-            => _invitations.Find(invitation => invitation.To.Contains(to)).ToList();
+        {
+            List<Invitation> invList = _invitations.Find(i => i.To.Equals(to)).ToList();
+            return invList;
+        }
 
         public Invitation UpdateInvitation(string id, InvitationRequest invitationRequest)
         {
