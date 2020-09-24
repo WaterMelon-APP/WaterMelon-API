@@ -37,13 +37,13 @@ namespace WaterMelon_API.Services
             return notifications;
         }
 
-        public List<Notification> GetForRecipient(String userId) {
-            var notifications = _notifications.Find<Notification>(notif => notif.To == userId).ToList();
+        public List<Notification> GetFrom(String from) {
+            var notifications = _notifications.Find<Notification>(notif => notif.From == from).ToList();
             return notifications;
         }
 
-        public List<Notification> GetForSender(String userId) {
-            var notifications = _notifications.Find<Notification>(notif => notif.From == userId).ToList();
+        public List<Notification> GetTo(String to) {
+            var notifications = _notifications.Find<Notification>(notif => notif.To == to).ToList();
             return notifications;
         }
 
