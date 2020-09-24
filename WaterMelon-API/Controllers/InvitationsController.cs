@@ -102,7 +102,7 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
-            var user = _userService.Get(res.To);
+            var user = _userService.GetFromName(res.To);
             if (user == null)
             {
                 return NotFound();
