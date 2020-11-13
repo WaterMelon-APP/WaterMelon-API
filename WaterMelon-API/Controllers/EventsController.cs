@@ -11,10 +11,14 @@ namespace WaterMelon_API.Controllers
     public class EventsController : ControllerBase
     {
         private readonly EventService _eventService;
+        private readonly ItemService _itemService;
+        private readonly NotificationService _notificationService;  
 
-        public EventsController(EventService eventService)
+        public EventsController(EventService eventService, ItemService itemService, NotificationService notificationService)
         {
             _eventService = eventService;
+            _itemService = itemService;
+            _notificationService = notificationService;
         }
 
         // GET: api/Events
@@ -82,6 +86,16 @@ namespace WaterMelon_API.Controllers
             if (res == null)
             {
                 return NotFound();
+            }
+            foreach (string item in res.ItemList) {
+                _eventService.RemoveItemFromList(id, item);
+                _itemService.RemoveItemWithId(item);
+            }
+            
+            List<Notification> notifList = _notificationService.GetFromEventId(id);
+            foreach (Notification notif in notifList)
+            {
+                _notificationService.Remove(notif.Id);
             }
             _eventService.RemoveEventWithId(id);
             return StatusCode(200);
