@@ -15,14 +15,16 @@ namespace WaterMelon_API.Controllers
         private readonly EventService _eventService;
         private readonly NotificationService _notificationService;
         private readonly UserService _userService;
+        private readonly EmailService _emailService;
 
         public InvitationsController(InvitationService invitationService, EventService eventService, NotificationService notificationService,
-            UserService userService)
+            UserService userService, EmailService emailService)
         {
             _invitationService = invitationService;
             _eventService = eventService;
             _notificationService = notificationService;
             _userService = userService;
+            _emailService = emailService;
         }
 
         // GET: api/Invitations
@@ -61,6 +63,8 @@ namespace WaterMelon_API.Controllers
             ev.InvitationList.Add(createdInvitation.Id);
             _eventService.UpdateEvent(ev);
             _notificationService.Create(new Notification(createdInvitation));
+            this._emailService.Send(createdInvitation.From, _emailService.CreateMailSubject(createdInvitation.From, createdInvitation.From),
+                _emailService.CreateMailBody(createdInvitation.From, createdInvitation.From));
             return CreatedAtRoute("Get", new { id = createdInvitation.Id }, createdInvitation);
         }
 

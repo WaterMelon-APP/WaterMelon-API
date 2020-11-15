@@ -48,6 +48,8 @@ namespace WaterMelon_API
             services.AddSingleton<IInvitationDatabaseSettings>(sp => sp.GetRequiredService<IOptions<InvitationDatabaseSettings>>().Value);
             services.AddSingleton<InvitationService>();
 
+            services.AddSingleton<EmailService>();
+
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing());
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
