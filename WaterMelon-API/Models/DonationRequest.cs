@@ -13,4 +13,13 @@ namespace WaterMelon_API.Models
         public int quantity { get; set; }
 
     }
+    
+    public class PayingRequest
+    {
+        [FromQuery]
+        public String UserId { get; set; }
+
+        [FromQuery]
+        public decimal Amount { get; set; }
+    }
 }

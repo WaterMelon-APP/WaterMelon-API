@@ -80,7 +80,7 @@ namespace WaterMelon_API.Controllers
             return _itemService.UpdateItem(id, itemRequest);
         }
 
-        //PUT: api/Items/Give/5
+              //PUT: api/Items/Give/5
         [HttpPut]
         [Authorize]
         [Route("Give/{id}")]
@@ -98,14 +98,14 @@ namespace WaterMelon_API.Controllers
         [HttpPut]
         [Authorize]
         [Route("Pay/{id}")]
-        public ActionResult<Item> Pay(string id, [FromBody] DonationRequest donationRequest)
+        public ActionResult<Item> Pay(string id, [FromBody] PayingRequest donationRequest)
         {
             var res = _itemService.GetFromItemId(id);
             if (res == null)
             {
                 return NotFound();
             }
-            return _itemService.PayItem(id, donationRequest.userId, donationRequest.quantity);
+            return _itemService.PayItem(id, donationRequest.UserId, donationRequest.Amount);
         }
 
         // DELETE: api/Items/5
