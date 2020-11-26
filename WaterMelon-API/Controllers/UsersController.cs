@@ -13,16 +13,22 @@ namespace WaterMelon_API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly EmailService _emailService;
 
-        public UsersController(UserService userService)
+        public UsersController(UserService userService, EmailService emailService)
         {
             _userService = userService;
+            _emailService = emailService;
         }
 
         [HttpGet(Name = "ping")]
         [Route("ping")]
         public IActionResult Ping()
         {
+            /*this._emailService.Send("hugo.roche@epitech.eu", _emailService.CreateInvitationMailSubject("Hugo FROM", "EVENT NAME"),
+                _emailService.CreateInviteMailBody("Hugo Test", "EVENT NAME 1"));
+            this._emailService.Send("hugo.roche@epitech.eu", _emailService.CreateModifyMailSubject("EVENT NAME"),
+                _emailService.CreateModifyMailBody("EVENT NAME 2"));*/
             return StatusCode(200, "Pong");
         }
 

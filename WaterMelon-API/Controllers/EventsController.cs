@@ -12,13 +12,16 @@ namespace WaterMelon_API.Controllers
     {
         private readonly EventService _eventService;
         private readonly ItemService _itemService;
-        private readonly NotificationService _notificationService;  
+        private readonly NotificationService _notificationService;
+        private readonly EmailService _emailService;
 
-        public EventsController(EventService eventService, ItemService itemService, NotificationService notificationService)
+        public EventsController(EventService eventService, ItemService itemService, NotificationService notificationService,
+            EmailService emailService)
         {
             _eventService = eventService;
             _itemService = itemService;
             _notificationService = notificationService;
+            _emailService = emailService;
         }
 
         // GET: api/Events
@@ -72,6 +75,12 @@ namespace WaterMelon_API.Controllers
             if (res == null)
             {
                 return NotFound();
+            }
+            var eventUsers = res.Guests;
+            for (int idx = 0; idx < eventUsers.Count; idx++)
+            {
+                this._emailService.Send(eventUsers[idx], _emailService.CreateModifyMailSubject(res.Name),
+               _emailService.CreateModifyMailBody(res.Name, id));
             }
             return _eventService.UpdateEvent(id, eventRequest);
         }

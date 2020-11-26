@@ -63,8 +63,10 @@ namespace WaterMelon_API.Controllers
             ev.InvitationList.Add(createdInvitation.Id);
             _eventService.UpdateEvent(ev);
             _notificationService.Create(new Notification(createdInvitation));
-            this._emailService.Send(createdInvitation.From, _emailService.CreateMailSubject(createdInvitation.From, createdInvitation.From),
-                _emailService.CreateMailBody(createdInvitation.From, createdInvitation.From));
+
+            this._emailService.Send(createdInvitation.To, _emailService.CreateInvitationMailSubject(createdInvitation.From, ev.Name),
+                _emailService.CreateInviteMailBody(createdInvitation.From, ev.Name, ev.Id));
+
             return CreatedAtRoute("Get", new { id = createdInvitation.Id }, createdInvitation);
         }
 
