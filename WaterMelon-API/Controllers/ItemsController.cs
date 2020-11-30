@@ -17,11 +17,15 @@ namespace WaterMelon_API.Controllers
 
         private readonly ItemService _itemService;
         private readonly EventService _eventService;
+        private readonly NotificationService _notificationService;
+        private readonly UserService _userService;
 
-        public ItemsController(ItemService itemService, EventService eventService)
+        public ItemsController(ItemService itemService, EventService eventService, NotificationService notificationService, UserService userService)
         {
             _itemService = itemService;
             _eventService = eventService;
+            _notificationService = notificationService;
+            _userService = userService;
         }
 
         // GET: api/Items
@@ -56,13 +60,13 @@ namespace WaterMelon_API.Controllers
             Item createdItem = _itemService.Create(it);
             if (createdItem == null)
             {
-                return Unauthorized("Item already exists.");
+                return Unauthorized("L'objet existe déjà.");
             }
 
             Event tmp = _eventService.AddItemToList(createdItem.FromEvent, createdItem.Id);
             if (tmp == null)
             {
-                return NotFound("The related event wasn't found");
+                return NotFound("L'événement n'a pas été trouvé.");
             }
             return CreatedAtRoute("Get", new { id = it.Id }, it);
         }
@@ -91,7 +95,29 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
-            return _itemService.GiveItem(id, donationRequest.userId, donationRequest.quantity);
+            
+            Item item = _itemService.GiveItem(id, donationRequest.userId, donationRequest.quantity);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            Event contribEvent = _eventService.GetFromEventId(res.FromEvent);
+            User user = _userService.Get(donationRequest.userId);
+            if (contribEvent.Owner != user.Name)
+            {
+                NotificationRequest request = new NotificationRequest();
+                request.Type = "Contribution";
+                request.From = donationRequest.userId;
+                request.To = contribEvent.Owner;
+                request.EventId = res.FromEvent;
+
+                Notification notif = new Notification(request);
+                notif.About = user.Name + " a contribué à votre événement \"" + contribEvent.Name + "\"";
+                _notificationService.Create(notif);
+            }
+            
+            return item;
         }
 
         //PUT: api/Items/Pay/5
@@ -105,7 +131,29 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
-            return _itemService.PayItem(id, donationRequest.userId, donationRequest.quantity);
+
+            Item item = _itemService.PayItem(id, donationRequest.userId, donationRequest.quantity);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            Event contribEvent = _eventService.GetFromEventId(res.FromEvent);
+            User user = _userService.Get(donationRequest.userId);
+            if (contribEvent.Owner != user.Name)
+            {
+                NotificationRequest request = new NotificationRequest();
+                request.Type = "Contribution";
+                request.From = donationRequest.userId;
+                request.To = contribEvent.Owner;
+                request.EventId = res.FromEvent;
+
+                Notification notif = new Notification(request);
+                notif.About = user.Name + " a contribué à votre événement \"" + contribEvent.Name + "\"";
+                _notificationService.Create(notif);
+            }
+
+            return item;
         }
 
         // DELETE: api/Items/5
