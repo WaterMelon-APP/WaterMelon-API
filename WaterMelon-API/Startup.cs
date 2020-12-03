@@ -26,6 +26,7 @@ namespace WaterMelon_API
         public void ConfigureServices(IServiceCollection services)
         {
             IdentityModelEventSource.ShowPII = true; // show error details
+            var facebookAuthSettings = new FacebookAuthSettings();
 
             // requires using Microsoft.Extensions.Options
             services.Configure<UserDatabaseSettings>(Configuration.GetSection(nameof(UserDatabaseSettings)));
@@ -51,6 +52,12 @@ namespace WaterMelon_API
             services.Configure<ProfilePictureDatabaseSettings>(Configuration.GetSection(nameof(ProfilePictureDatabaseSettings)));
             services.AddSingleton<IProfilePictureDatabaseSettings>(sp => sp.GetRequiredService<IOptions<ProfilePictureDatabaseSettings>>().Value);
             services.AddSingleton<ProfilePictureService>();
+
+            Configuration.Bind(nameof(FacebookAuthSettings), facebookAuthSettings);
+            services.AddSingleton(facebookAuthSettings);
+
+            services.AddHttpClient();
+            services.AddSingleton<FacebookAuthService>();
 
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing());
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using WaterMelon_API.Models;
 using WaterMelon_API.Services;
 using WaterMelon_API;
+using System.Threading.Tasks;
 
 namespace WaterMelon_API.Controllers
 {
@@ -14,9 +15,12 @@ namespace WaterMelon_API.Controllers
     {
         private readonly UserService _userService;
 
-        public UsersController(UserService userService)
+        private readonly FacebookAuthService _facebookAuthService;
+
+        public UsersController(UserService userService, FacebookAuthService facebookAuthService)
         {
             _userService = userService;
+            _facebookAuthService = facebookAuthService;
         }
 
         [HttpGet(Name = "ping")]
@@ -212,6 +216,29 @@ namespace WaterMelon_API.Controllers
             {
                 return BadRequest(e);
             }
+        }
+
+        [HttpPost]
+        [Route("login-fb")]
+        public async Task<IActionResult> LoginFacebook([FromBody] UserFacebookAuthRequest userFacebookRequest)
+        {
+            var authResponse = await _facebookAuthService.ValidateAccessTokenAsync(userFacebookRequest.AccessToken);
+            if (!authResponse.Data.IsValid)
+            {
+                return StatusCode(500, new { error = "Error with token while logging with Facebook"});
+            }
+            var userInfo = await _facebookAuthService.GetUserInfoAsync(userFacebookRequest.AccessToken);
+            var userLoaded = _userService.GetFromEmail(userInfo.Email);
+            if (userLoaded == null)
+            {
+                var newUser = new User(userInfo.FirstName, userInfo.LastName, userInfo.Email);
+                _userService.Create(newUser);
+                newUser.Token = _userService.GenerateJwt();
+                return Ok(newUser);
+                
+            }
+            userLoaded.Token = _userService.GenerateJwt();
+            return Ok(userLoaded);
         }
     }
 }
