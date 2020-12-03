@@ -87,9 +87,13 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
-            foreach (string item in res.ItemList) {
-                _eventService.RemoveItemFromList(id, item);
-                _itemService.RemoveItemWithId(item);
+            if (res.ItemList != null)
+            {
+                foreach (string item in res.ItemList)
+                {
+                    _eventService.RemoveItemFromList(id, item);
+                    _itemService.RemoveItemWithId(item);
+                }
             }
             
             List<Notification> notifList = _notificationService.GetFromEventId(id);
