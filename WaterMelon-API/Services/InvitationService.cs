@@ -84,6 +84,9 @@ namespace WaterMelon_API.Services
             {
                 return null;
             }
+            string from = invitationLoaded.From;
+            invitationLoaded.From = invitationLoaded.To;
+            invitationLoaded.To = from;
             invitationLoaded.Status = InvitationStatus.Accepted;
             _invitations.ReplaceOne(i => i.Id == invitationLoaded.Id, invitationLoaded);
             return GetFromInvitationId(id); 
@@ -96,6 +99,9 @@ namespace WaterMelon_API.Services
                 return null;
             if (invitationLoaded.Status == InvitationStatus.Pending) 
             {
+                string from = invitationLoaded.From;
+                invitationLoaded.From = invitationLoaded.To;
+                invitationLoaded.To = from;
                 invitationLoaded.Status = InvitationStatus.Refused;
                 _invitations.ReplaceOne(i => i.Id == id, invitationLoaded);
                 return invitationLoaded;

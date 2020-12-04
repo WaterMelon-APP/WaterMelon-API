@@ -106,13 +106,15 @@ namespace WaterMelon_API.Controllers
             {
                 return StatusCode(400, "Impossible d'accepter l'invitation car elle n'est pas en attente.");
             }
-            var res = _invitationService.AcceptInvitation(id);            
+            var res = _invitationService.AcceptInvitation(id);
             var user = _userService.GetFromName(res.To);
             if (user == null)
             {
                 return StatusCode(404, "Utilisateur non trouve.");
             }
-            Notification notif = _notificationService.Create(new Notification(res));
+            Notification notif = new Notification(res);
+            notif.Type = "InvitationStatus";
+            _notificationService.Create(notif);
             var result = _eventService.AddGuestToEvent(res.EventId, user.Username);
             _eventService.RemoveInvitationFromEvent(res);
             _invitationService.RemoveInvitationWithId(id);
@@ -134,7 +136,9 @@ namespace WaterMelon_API.Controllers
                 return StatusCode(400, "Impossible d'accepter l'invitation car elle n'est pas en attente.");
             }
             var res = _invitationService.RefuseInvitation(id);
-            Notification notif = _notificationService.Create(new Notification(res));
+            Notification notif = new Notification(res);
+            notif.Type = "InvitationStatus";
+            _notificationService.Create(notif);
             _eventService.RemoveInvitationFromEvent(res);
             _invitationService.RemoveInvitationWithId(id);
             return StatusCode(200, "Invitation refusee.");

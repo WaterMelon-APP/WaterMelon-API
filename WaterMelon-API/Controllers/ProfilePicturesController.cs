@@ -54,7 +54,7 @@ namespace WaterMelon_API.Controllers
         {
             var filePath = Path.GetTempFileName();
             if (pictureFormData.File == null) {
-                return NotFound();
+                return NotFound("Veuillez envoyer un fichier.");
             }
             if (pictureFormData.File.Length > 0)
             {

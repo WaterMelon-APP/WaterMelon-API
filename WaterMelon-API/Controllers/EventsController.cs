@@ -87,9 +87,13 @@ namespace WaterMelon_API.Controllers
             {
                 return NotFound();
             }
-            foreach (string item in res.ItemList) {
-                _eventService.RemoveItemFromList(id, item);
-                _itemService.RemoveItemWithId(item);
+            if (res.ItemList != null)
+            {
+                foreach (string item in res.ItemList)
+                {
+                    _eventService.RemoveItemFromList(id, item);
+                    _itemService.RemoveItemWithId(item);
+                }
             }
             
             List<Notification> notifList = _notificationService.GetFromEventId(id);
@@ -106,12 +110,19 @@ namespace WaterMelon_API.Controllers
         [Route("RemoveGuest/{id}")]
         public ActionResult<Event> RemoveGuest(string id, [FromBody] EventGuestRequest eventGuestRequest)
         {
-            var res = _eventService.GetFromEventId(id);
-            if (res == null)
+            Event res = _eventService.RemoveGuestFromEvent(id, eventGuestRequest);
+            if (res != null)
             {
-                return NotFound();
+                NotificationRequest request = new NotificationRequest();
+                request.EventId = res.Id;
+                request.From = eventGuestRequest.GuestName;
+                request.To = res.Owner;
+                request.Type = "QuitEvent";
+                Notification notif = new Notification(request);
+                notif.About = eventGuestRequest.GuestName + " a quitté votre événement \"" + res.Name + "\"";
+                _notificationService.Create(notif);
             }
-            return _eventService.RemoveGuestFromEvent(id, eventGuestRequest);
+            return res;
         }
 
         [HttpPost]
@@ -119,12 +130,19 @@ namespace WaterMelon_API.Controllers
         [Route("AddGuest/{id}")]
         public ActionResult<Event> AddGuest(string id, [FromBody] EventGuestRequest eventGuestRequest)
         {
-            var res = _eventService.GetFromEventId(id);
-            if (res == null)
+            Event res = _eventService.AddGuestToEvent(id, eventGuestRequest);
+            if (res != null)
             {
-                return NotFound();
+                NotificationRequest request = new NotificationRequest();
+                request.EventId = res.Id;
+                request.From = eventGuestRequest.GuestName;
+                request.To = res.Owner;
+                request.Type = "JoinedEvent";
+                Notification notif = new Notification(request);
+                notif.About = eventGuestRequest.GuestName + " a rejoint votre événement \"" + res.Name + "\"";
+                _notificationService.Create(notif);
             }
-            return _eventService.AddGuestToEvent(id, eventGuestRequest);
+            return res;
         }
     }
 }
