@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
-using WaterMelon_API;
 using WaterMelon_API.Models;
 using WaterMelon_API.Helpers;
 
@@ -94,6 +93,16 @@ namespace WaterMelon_API.Services
             return null;
         }
 
+        public User GetFromEmail(String email)
+        {
+            User user = _users.Find<User>(user => user.Email.Equals(email)).FirstOrDefault();
+            if (user == null)
+            {
+                return null;
+            }
+            return user;
+        }
+
         public User Create(User user)
         {
             User userLoaded = _users.Find<User>(userQuery => userQuery.Username.Equals(user.Username)).FirstOrDefault();
@@ -118,6 +127,17 @@ namespace WaterMelon_API.Services
         public void Remove(String id)
         {
             _users.DeleteOne(user => user.Id == id);
+        }
+
+        public string GenerateJwt()
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["jwt:key"]));
+                var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(this._configuration["jwt:issuer"],
+                                             this._configuration["jwt:issuer"],
+                                             expires: DateTime.Now.AddMinutes(90),
+                                             signingCredentials: credentials);
+                return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

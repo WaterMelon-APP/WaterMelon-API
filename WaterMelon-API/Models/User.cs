@@ -34,5 +34,13 @@ namespace WaterMelon_API.Models
         public byte[] ProfilePicture { get; set; } = null;
 
         public String[] Events { get; set; }
+
+        public User(string firstName, string lastName, string email)
+        {
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Username = firstName + lastName;
+            this.Email = email;
+        }
     }
 }
