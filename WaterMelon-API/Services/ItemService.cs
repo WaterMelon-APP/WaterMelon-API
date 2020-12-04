@@ -90,22 +90,20 @@ namespace WaterMelon_API.Services
             return GetFromItemId(id);
         }
 
-        public Item PayItem(string id, string user, int amount)
+        public Item PayItem(string id, string user, decimal amount)
         {
             Item newItem = _items.Find(_items => _items.Id == id).FirstOrDefault();
-
-            if(newItem.Pay != null && newItem.Pay.ContainsKey(user))
-            {
-                newItem.QuantityLeft = Convert.ToInt32(Math.Ceiling(Convert.ToDouble((newItem.QuantityLeft * newItem.Price + newItem.Pay[user]) / newItem.Price)));
+            int round = Convert.ToInt32(Math.Floor(amount / newItem.Price));
+            if (newItem.Pay == null) {
+                newItem.Pay = new Dictionary<string, decimal>();
             }
-            newItem.QuantityLeft = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(newItem.QuantityLeft * newItem.Price - amount) / newItem.Price));
-            
-            if (newItem.Pay == null)
-            {
-                newItem.Pay = new Dictionary<string, int>();
+            if (newItem.Pay != null && newItem.Pay.ContainsKey(user)) {
+                int oldContribution = Convert.ToInt32(newItem.Pay[user] / newItem.Price);
+                newItem.QuantityLeft += oldContribution;
             }
-            newItem.Pay[user] =  amount;
-
+            newItem.Pay[user] = Convert.ToDecimal(newItem.Price * round);
+            int calcul = (newItem.QuantityLeft == 0) ? newItem.Quantity : newItem.QuantityLeft;
+            newItem.QuantityLeft = calcul - round;
             _items.ReplaceOne(i => i.Id == id, newItem);
             return GetFromItemId(id);
         }

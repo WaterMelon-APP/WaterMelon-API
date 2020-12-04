@@ -16,7 +16,7 @@ namespace WaterMelon_API.Models
         public int Quantity { get; set; }
 
         [FromQuery]
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         [FromQuery]
         public string About { get; set; }
@@ -25,7 +25,7 @@ namespace WaterMelon_API.Models
         public Dictionary<string, int> Bring { get; set; }
 
         [FromQuery]
-        public Dictionary<string, int> Pay { get; set; }
+        public Dictionary<string, decimal> Pay { get; set; }
 
         [FromQuery]
         public string FromEvent { get; set; }

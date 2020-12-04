@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace WaterMelon_API.Models
 {
-    public class Item
+     public class Item
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -18,13 +18,13 @@ namespace WaterMelon_API.Models
 
         public int Quantity { get; set; }
 
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         public string About { get; set; }
 
         public Dictionary<string, int> Bring { get; set; }
 
-        public Dictionary<string, int> Pay { get; set; }
+        public Dictionary<string, decimal> Pay { get; set; }
 
         public string FromEvent { get; set; }
 
