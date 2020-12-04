@@ -64,7 +64,7 @@ namespace WaterMelon_API.Controllers
                     using (var memoryStream = new MemoryStream())
                     {
                         await pictureFormData.File.CopyToAsync(memoryStream);
-                        if (memoryStream.Length < 2097152)
+                        if (memoryStream.Length < 4194304)
                         {
                             stream.CopyTo(memoryStream);
                             var mbytes = memoryStream.ToArray();
@@ -87,7 +87,7 @@ namespace WaterMelon_API.Controllers
                         }
                         else 
                         {
-                            return BadRequest("File size must not exceed 2MB.");
+                            return BadRequest("File size must not exceed 4MB.");
                         }
                     }
                 }
