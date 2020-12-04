@@ -14,13 +14,14 @@ namespace WaterMelon_API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserService _userService;
-
         private readonly FacebookAuthService _facebookAuthService;
+        private readonly GoogleAuthService _googleAuthService;
 
-        public UsersController(UserService userService, FacebookAuthService facebookAuthService)
+        public UsersController(UserService userService, FacebookAuthService facebookAuthService, GoogleAuthService googleAuthService)
         {
             _userService = userService;
             _facebookAuthService = facebookAuthService;
+            _googleAuthService = googleAuthService;
         }
 
         [HttpGet(Name = "ping")]
@@ -236,6 +237,27 @@ namespace WaterMelon_API.Controllers
                 newUser.Token = _userService.GenerateJwt();
                 return Ok(newUser);
                 
+            }
+            userLoaded.Token = _userService.GenerateJwt();
+            return Ok(userLoaded);
+        }
+
+        [HttpPost]
+        [Route("login-google")]
+        public async Task<IActionResult> LoginGoogle([FromBody] UserGoogleAuthRequest userGoogleRequest)
+        {
+            var authResponse = await _googleAuthService.ValidateAccessTokenAsync(userGoogleRequest.AccessToken);
+            if (authResponse.Email == null)
+            {
+                return StatusCode(400, "Error while logging with Google");
+            }
+            var userLoaded = _userService.GetFromEmail(authResponse.Email);
+            if (userLoaded == null)
+            {
+                var newUser = new User(authResponse.Name, authResponse.GivenName, authResponse.Email);
+                _userService.Create(newUser);
+                newUser.Token = _userService.GenerateJwt();
+                return Ok(newUser);
             }
             userLoaded.Token = _userService.GenerateJwt();
             return Ok(userLoaded);
