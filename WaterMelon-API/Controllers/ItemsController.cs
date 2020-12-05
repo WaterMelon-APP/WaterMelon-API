@@ -108,7 +108,7 @@ namespace WaterMelon_API.Controllers
             {
                 NotificationRequest request = new NotificationRequest();
                 request.Type = "Contribution";
-                request.From = donationRequest.userId;
+                request.From = user.Name;
                 request.To = contribEvent.Owner;
                 request.EventId = res.FromEvent;
 
@@ -144,7 +144,7 @@ namespace WaterMelon_API.Controllers
             {
                 NotificationRequest request = new NotificationRequest();
                 request.Type = "Contribution";
-                request.From = donationRequest.userId;
+                request.From = user.Name;
                 request.To = contribEvent.Owner;
                 request.EventId = res.FromEvent;
 
