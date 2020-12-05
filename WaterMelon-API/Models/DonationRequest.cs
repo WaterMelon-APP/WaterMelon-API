@@ -17,7 +17,7 @@ namespace WaterMelon_API.Models
     public class PayingRequest
     {
         [FromQuery]
-        public String UserId { get; set; }
+        public String userId { get; set; }
 
         [FromQuery]
         public decimal Amount { get; set; }
