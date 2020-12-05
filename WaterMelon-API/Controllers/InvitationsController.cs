@@ -114,6 +114,7 @@ namespace WaterMelon_API.Controllers
             }
             Notification notif = new Notification(res);
             notif.Type = "InvitationStatus";
+            notif.About = notif.From + " a accepté votre invitation.";
             _notificationService.Create(notif);
             var result = _eventService.AddGuestToEvent(res.EventId, user.Username);
             _eventService.RemoveInvitationFromEvent(res);
@@ -138,6 +139,7 @@ namespace WaterMelon_API.Controllers
             var res = _invitationService.RefuseInvitation(id);
             Notification notif = new Notification(res);
             notif.Type = "InvitationStatus";
+            notif.About = notif.From + " a décliné votre invitation.";
             _notificationService.Create(notif);
             _eventService.RemoveInvitationFromEvent(res);
             _invitationService.RemoveInvitationWithId(id);
