@@ -107,7 +107,7 @@ namespace WaterMelon_API.Controllers
                 return StatusCode(400, "Impossible d'accepter l'invitation car elle n'est pas en attente.");
             }
             var res = _invitationService.AcceptInvitation(id);
-            var user = _userService.GetFromName(res.To);
+            var user = _userService.GetFromName(res.From);
             if (user == null)
             {
                 return StatusCode(404, "Utilisateur non trouve.");
