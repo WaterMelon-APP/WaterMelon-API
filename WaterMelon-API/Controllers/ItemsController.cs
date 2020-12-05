@@ -104,7 +104,7 @@ namespace WaterMelon_API.Controllers
 
             Event contribEvent = _eventService.GetFromEventId(res.FromEvent);
             User user = _userService.Get(donationRequest.userId);
-            if (contribEvent.Owner != user.Name)
+            if (contribEvent.Owner != user.Username)
             {
                 NotificationRequest request = new NotificationRequest();
                 request.Type = "Contribution";
@@ -140,7 +140,7 @@ namespace WaterMelon_API.Controllers
 
             Event contribEvent = _eventService.GetFromEventId(res.FromEvent);
             User user = _userService.Get(donationRequest.userId);
-            if (contribEvent.Owner != user.Name)
+            if (contribEvent.Owner != user.Username)
             {
                 NotificationRequest request = new NotificationRequest();
                 request.Type = "Contribution";
