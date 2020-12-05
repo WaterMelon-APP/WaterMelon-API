@@ -108,12 +108,12 @@ namespace WaterMelon_API.Controllers
             {
                 NotificationRequest request = new NotificationRequest();
                 request.Type = "Contribution";
-                request.From = user.Name;
+                request.From = user.Username;
                 request.To = contribEvent.Owner;
                 request.EventId = res.FromEvent;
 
                 Notification notif = new Notification(request);
-                notif.About = user.Name + " a contribué à votre événement \"" + contribEvent.Name + "\"";
+                notif.About = user.Username + " a contribué à votre événement \"" + contribEvent.Name + "\"";
                 _notificationService.Create(notif);
             }
             
@@ -144,12 +144,12 @@ namespace WaterMelon_API.Controllers
             {
                 NotificationRequest request = new NotificationRequest();
                 request.Type = "Contribution";
-                request.From = user.Name;
+                request.From = user.Username;
                 request.To = contribEvent.Owner;
                 request.EventId = res.FromEvent;
 
                 Notification notif = new Notification(request);
-                notif.About = user.Name + " a contribué à votre événement \"" + contribEvent.Name + "\"";
+                notif.About = user.Username + " a contribué à votre événement \"" + contribEvent.Name + "\"";
                 _notificationService.Create(notif);
             }
 
