@@ -132,7 +132,7 @@ namespace WaterMelon_API.Controllers
                 return NotFound();
             }
 
-            Item item = _itemService.PayItem(id, donationRequest.UserId, donationRequest.Amount);
+            Item item = _itemService.PayItem(id, donationRequest.userId, donationRequest.Amount);
             if (item == null)
             {
                 return NotFound();
