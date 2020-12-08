@@ -25,10 +25,6 @@ namespace WaterMelon_API.Controllers
         [Route("ping")]
         public IActionResult Ping()
         {
-            /*this._emailService.Send("hugo.roche@epitech.eu", _emailService.CreateInvitationMailSubject("Hugo FROM", "EVENT NAME"),
-                _emailService.CreateInviteMailBody("Hugo Test", "EVENT NAME 1"));
-            this._emailService.Send("hugo.roche@epitech.eu", _emailService.CreateModifyMailSubject("EVENT NAME"),
-                _emailService.CreateModifyMailBody("EVENT NAME 2"));*/
             return StatusCode(200, "Pong");
         }
 
@@ -37,7 +33,7 @@ namespace WaterMelon_API.Controllers
         [Authorize]
         public ActionResult<List<User>> Get() =>
            _userService.Get();
-        
+
         // GET: api/Users/5
         [HttpGet("{id}", Name = "GetUser")]
         [Authorize]
@@ -103,11 +99,25 @@ namespace WaterMelon_API.Controllers
 
             user.Password = encryptedPassword;
 
-            User createdUser =_userService.Create(user);
+            User createdUser = _userService.Create(user);
             if (createdUser == null) {
                 return Unauthorized("User already exists.");
             }
             return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
+        }
+
+
+        [HttpPost("recoverpasswd/{userId}",  Name = "recoverpasswd")]
+        [Route("recoverpasswd")]
+        public ActionResult<User> RecoverPasswd(string userId)
+        {
+            var user = _userService.Get(userId);
+
+            if (user == null)
+            {
+                return StatusCode(401, "Aucun utilisateur trouvé avec cet identifiant.");
+            }
+            return _userService.Update(userId, user);
         }
 
         [HttpPost(Name = "forgotpasswd")]
@@ -120,6 +130,8 @@ namespace WaterMelon_API.Controllers
             {
                 return StatusCode(401, "Aucun utilisateur trouvé avec ces informations.");
             }
+            this._emailService.Send(fpr.Email, _emailService.CreatePasswdRecoveryMailSubject(),
+               _emailService.CreatePasswdRecoveryMailBody(user.Id));
             return user;
         }
 

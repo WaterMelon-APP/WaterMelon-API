@@ -21,6 +21,7 @@ namespace WaterMelon_API.Services
 
     public class EmailService
     {
+        const string c_webAppUrl = "http://localhost:4200/";
 
         private readonly IConfiguration _configuration;
         private readonly EventService _eventService;
@@ -55,7 +56,7 @@ namespace WaterMelon_API.Services
             string bodyReturn = first + "<h5 style=\"font-size:18px;border-radius:12px;color:white;background-color: #FD5757;padding:40px;margin:0px;margin-top:-4px;\">Nouvelle invitation !</h5></div><div class=\"card-body\"><br><br><img src=\"watermelon_logo.jpg\" height=\"160px\"/><br><br><p>";
             bodyReturn += "Tu as été invité(e) à l'événement</p><h3>" + eventName;
             bodyReturn += "</h3><p>par</par><h5 style=\"font-size:16px;color:FD5757;\">" + eventCreator + "</h5><a href =\"";
-            bodyReturn += _eventService.GetFromEventId(eventId) + "\" " + last;
+            bodyReturn += c_webAppUrl + "event/" + _eventService.GetFromEventId(eventId) + "\" " + last;
             return (bodyReturn);
         }
         public string CreateModifyMailBody(string eventName, string eventId)
@@ -67,10 +68,25 @@ namespace WaterMelon_API.Services
             string bodyReturn = first + "<h5 style=\"font-size:18px;border-radius:12px;color:white;background-color: #FD5757;padding:60px;margin:0px;margin-top:-4px;\">Modification d'événement !</h5></div><div class=\"card-body\"><br><br><img src=\"watermelon_logo.jpg\" height=\"160px\"/><br><br><p>";
             bodyReturn += "L'événement auquel tu participes</p><h3>" + eventName;
             bodyReturn += "</h3><p>a été modifié !<br></p><a href =\"";
-            bodyReturn += _eventService.GetFromEventId(eventId) + "\" " + last;
+            bodyReturn += c_webAppUrl + "event/" + _eventService.GetFromEventId(eventId) + "\" " + last;
             return (bodyReturn);
         }
+        public string CreatePasswdRecoveryMailBody(string userId)
+        {
+            string first = File.ReadAllText("MailTemplate/EmailTemplateFirst.html");
+            string last = File.ReadAllText("MailTemplate/EmailTemplateLast.html");
 
+
+            string bodyReturn = first + "<h5 style=\"font-size:18px;border-radius:12px;color:white;background-color: #FD5757;padding:60px;margin:0px;margin-top:-4px;\">Votre lien de récupération de mot de passe WaterMelon</h5></div><div class=\"card-body\"><br><br><img src=\"watermelon_logo.jpg\" height=\"160px\"/><br><br><p>";
+            bodyReturn += "Vous avez demandé un lien de récupération de votre mot de passe</p><h3>";// + eventName;
+            bodyReturn += "</h3><p>Clickez sur le bouton ci-dessous pour restorer votre mot de passe !<br></p><a href =\"";
+            bodyReturn += c_webAppUrl + "reset/" + userId + "\" " + last;
+            return (bodyReturn);
+        }
+        public string CreatePasswdRecoveryMailSubject()
+        {
+            return ("WaterMelon Password Recovery Link");
+        }
         public string CreateInvitationMailSubject(string eventCreator, string eventName)
         {
             return ("WaterMelon : " + eventCreator + " t'as invité à " + eventName);
