@@ -16,12 +16,14 @@ namespace WaterMelon_API.Controllers
         private readonly UserService _userService;
         private readonly FacebookAuthService _facebookAuthService;
         private readonly GoogleAuthService _googleAuthService;
+        private readonly EmailService _emailService;
 
-        public UsersController(UserService userService, FacebookAuthService facebookAuthService, GoogleAuthService googleAuthService)
+        public UsersController(UserService userService, FacebookAuthService facebookAuthService, GoogleAuthService googleAuthService, EmailService emailService)
         {
             _userService = userService;
             _facebookAuthService = facebookAuthService;
             _googleAuthService = googleAuthService;
+            _emailService = emailService;
         }
 
         [HttpGet(Name = "ping")]
@@ -36,7 +38,7 @@ namespace WaterMelon_API.Controllers
         [Authorize]
         public ActionResult<List<User>> Get() =>
            _userService.Get();
-        
+
         // GET: api/Users/5
         [HttpGet("{id}", Name = "GetUser")]
         [Authorize]
@@ -102,11 +104,25 @@ namespace WaterMelon_API.Controllers
 
             user.Password = encryptedPassword;
 
-            User createdUser =_userService.Create(user);
+            User createdUser = _userService.Create(user);
             if (createdUser == null) {
                 return Unauthorized("User already exists.");
             }
             return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
+        }
+
+
+        [HttpPost("recoverpasswd/{userId}",  Name = "recoverpasswd")]
+        [Route("recoverpasswd")]
+        public ActionResult<User> RecoverPasswd(string userId)
+        {
+            var user = _userService.Get(userId);
+
+            if (user == null)
+            {
+                return StatusCode(401, "Aucun utilisateur trouvé avec cet identifiant.");
+            }
+            return _userService.Update(userId, user);
         }
 
         [HttpPost(Name = "forgotpasswd")]
@@ -119,6 +135,8 @@ namespace WaterMelon_API.Controllers
             {
                 return StatusCode(401, "Aucun utilisateur trouvé avec ces informations.");
             }
+            this._emailService.Send(fpr.Email, _emailService.CreatePasswdRecoveryMailSubject(),
+               _emailService.CreatePasswdRecoveryMailBody(user.Id));
             return user;
         }
 

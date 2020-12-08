@@ -66,6 +66,7 @@ namespace WaterMelon_API
             services.AddHttpClient();
             services.AddSingleton<FacebookAuthService>();
             services.AddSingleton<GoogleAuthService>();
+            services.AddSingleton<EmailService>();
 
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing());
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
