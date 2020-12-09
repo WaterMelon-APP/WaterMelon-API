@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- main
+- master
 
 pool:
   vmImage: 'windows-latest'
@@ -32,10 +32,3 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'WaterMelon-API-dev-as - Azure'
-    appType: 'webApp'
-    WebAppName: 'WaterMelon-API-dev-as'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
