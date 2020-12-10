@@ -11,6 +11,8 @@ using MimeKit;
 using MimeKit.Text;
 using MimeKit.Utils;
 using Microsoft.Extensions.Configuration;
+//using System.Net;
+//using System.Net.Mail;
 
 namespace WaterMelon_API.Services
 {
@@ -42,7 +44,7 @@ namespace WaterMelon_API.Services
             _eventService = eventService;
             this._emailSettings.SmtpHost = "smtp.gmail.com";
             this._emailSettings.SmtpPort = 587;
-            this._emailSettings.SmtpSecure = SecureSocketOptions.StartTls;
+            //this._emailSettings.SmtpSecure = SecureSocketOptions.StartTls;
             this._emailSettings.FontColor = _configuration["stmplogging:watermelonmaillogin"];
             this._emailSettings.Font2Color = _configuration["stmplogging:watermelonmailpassword"];
         }
@@ -97,13 +99,56 @@ namespace WaterMelon_API.Services
         }
 
 
-        public void Send(string to, string subject, string html)
+        public void Send(string to, string subjects, string html)
         {
+            /*onst string tmp = "";
+            var fromAddress = new MailAddress(_emailSettings.FontColor, "WaterMelon");
+            var toAddress = new MailAddress(to, to);
+            const string fromPassword = tmp;
+            const string subject = subjects;
+            const string body = "Hey now!!";
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                Timeout = 20000
+            };
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body
+            })
+            {
+                smtp.Send(message);
+            }*/
+
+            /*MailMessage mail = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+            mail.From = new MailAddress(_emailSettings.FontColor);
+            mail.To.Add(to);
+            mail.Subject = subject;
+            mail.Body = html;
+
+            System.Net.Mail.Attachment attachment;
+            attachment = new System.Net.Mail.Attachment("MailTemplate/watermelon_logo.jpg");
+            mail.Attachments.Add(attachment);
+
+            SmtpServer.Port = 587;
+            SmtpServer.Credentials = new System.Net.NetworkCredential(_emailSettings.FontColor, _emailSettings.Font2Color);
+            SmtpServer.EnableSsl = true;
+
+            SmtpServer.Send(mail);*/
+
+
             // create message
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_emailSettings.FontColor));
             email.To.Add(MailboxAddress.Parse(to));
-            email.Subject = subject;
+            email.Subject = subjects;
             var builder = new BodyBuilder();
             builder.HtmlBody = html;
             var image = builder.LinkedResources.Add("MailTemplate/watermelon_logo.jpg");
@@ -113,10 +158,10 @@ namespace WaterMelon_API.Services
             // send email
             using var smtp = new SmtpClient();
             smtp.Connect(_emailSettings.SmtpHost, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
-            smtp.AuthenticationMechanisms.Remove("XOAUTH2");
             smtp.Authenticate(_emailSettings.FontColor, _emailSettings.Font2Color);
             smtp.Send(email);
             smtp.Disconnect(true);
+
         }
     }
 }
