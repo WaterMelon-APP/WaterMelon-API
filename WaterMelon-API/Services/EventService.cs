@@ -56,7 +56,15 @@ namespace WaterMelon_API.Services
         public Event UpdateEvent(string id, EventRequest eventRequest)
         {
             Event eventReceived = new Event(eventRequest);
-            _events.ReplaceOne(e => e.Id == id, eventReceived);
+            Event eventLoaded = _events.Find<Event>(eventQuery => eventQuery.Id.Equals(id)).FirstOrDefault();
+                eventLoaded.Date = eventReceived.Date != null ? eventReceived.Date : eventLoaded.Date;
+                eventLoaded.Guests = eventReceived.Guests != null ? eventReceived.Guests : eventLoaded.Guests;
+                eventLoaded.InvitationList = eventReceived.InvitationList != null ? eventReceived.InvitationList : eventLoaded.InvitationList;
+                eventLoaded.ItemList = eventReceived.ItemList != null ? eventReceived.ItemList : eventLoaded.ItemList;
+                eventLoaded.Address = eventReceived.Address != null ? eventReceived.Address : eventLoaded.Address;
+                eventLoaded.Public = eventReceived.Public != eventLoaded.Public ? eventReceived.Public : eventLoaded.Public;
+                eventLoaded.Name = eventReceived.Name != null ? eventReceived.Name : eventLoaded.Name;
+                _events.ReplaceOne(e => e.Id == id, eventLoaded);
             return GetFromEventId(id);
         }
         public Event UpdateEvent(Event ev)
