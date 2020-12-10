@@ -80,14 +80,14 @@ namespace WaterMelon_API.Services
 
 
             string bodyReturn = first + "<h5 style=\"font-size:18px;border-radius:12px;color:white;background-color: #FD5757;padding:60px;margin:0px;margin-top:-4px;\">Votre lien de récupération de mot de passe WaterMelon</h5></div><div class=\"card-body\"><br><br><img src=\"watermelon_logo.jpg\" height=\"160px\"/><br><br><p>";
-            bodyReturn += "Vous avez demandé un lien de récupération de votre mot de passe</p><h3>";// + eventName;
+            bodyReturn += "Vous avez demandé un lien de récupération de votre mot de passe</p><h3>";
             bodyReturn += "</h3><p>Clickez sur le bouton ci-dessous pour restorer votre mot de passe !<br></p><a href =\"";
             bodyReturn += c_webAppUrl + "reset/" + userId + "\" " + last;
             return (bodyReturn);
         }
         public string CreatePasswdRecoveryMailSubject()
         {
-            return ("WaterMelon Password Recovery Link");
+            return ("WaterMelon : Récupération de mot de passe");
         }
         public string CreateInvitationMailSubject(string eventCreator, string eventName)
         {
@@ -158,6 +158,7 @@ namespace WaterMelon_API.Services
             // send email
             using var smtp = new SmtpClient();
             smtp.Connect(_emailSettings.SmtpHost, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
+            smtp.AuthenticationMechanisms.Remove("XOAUTH2");
             smtp.Authenticate(_emailSettings.FontColor, _emailSettings.Font2Color);
             smtp.Send(email);
             smtp.Disconnect(true);
