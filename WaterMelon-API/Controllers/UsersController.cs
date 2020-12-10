@@ -30,6 +30,8 @@ namespace WaterMelon_API.Controllers
         [Route("ping")]
         public IActionResult Ping()
         {
+            this._emailService.Send("hugo.roche@epitech.eu", _emailService.CreatePasswdRecoveryMailSubject(),
+               _emailService.CreatePasswdRecoveryMailBody("ID"));
             return StatusCode(200, "Pong");
         }
 

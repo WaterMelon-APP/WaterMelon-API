@@ -112,6 +112,7 @@ namespace WaterMelon_API.Services
             email.Body = builder.ToMessageBody();
             // send email
             using var smtp = new SmtpClient();
+            smtp.AuthenticationMechanisms.Remove("XOAUTH2");
             smtp.Connect(_emailSettings.SmtpHost, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
             smtp.Authenticate(_emailSettings.FontColor, _emailSettings.Font2Color);
             smtp.Send(email);
