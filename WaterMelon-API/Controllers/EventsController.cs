@@ -77,11 +77,11 @@ namespace WaterMelon_API.Controllers
                 return NotFound();
             }
             var eventUsers = res.Guests;
-            for (int idx = 0; idx < eventUsers.Count; idx++)
+            /*for (int idx = 0; idx < eventUsers.Count; idx++)
             {
                 this._emailService.Send(eventUsers[idx], _emailService.CreateModifyMailSubject(res.Name),
                _emailService.CreateModifyMailBody(res.Name, id));
-            }
+            }*/
             return _eventService.UpdateEvent(id, eventRequest);
         }
 
