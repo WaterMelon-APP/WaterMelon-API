@@ -43,7 +43,7 @@ namespace WaterMelon_API.Services
             _configuration = config;
             _eventService = eventService;
             this._emailSettings.SmtpHost = "smtp.gmail.com";
-            this._emailSettings.SmtpPort = 587;
+            this._emailSettings.SmtpPort = 465;
             //this._emailSettings.SmtpSecure = SecureSocketOptions.StartTls;
             this._emailSettings.FontColor = _configuration["stmplogging:watermelonmaillogin"];
             this._emailSettings.Font2Color = _configuration["stmplogging:watermelonmailpassword"];
