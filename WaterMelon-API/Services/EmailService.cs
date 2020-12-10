@@ -56,7 +56,7 @@ namespace WaterMelon_API.Services
             string bodyReturn = first + "<h5 style=\"font-size:18px;border-radius:12px;color:white;background-color: #FD5757;padding:40px;margin:0px;margin-top:-4px;\">Nouvelle invitation !</h5></div><div class=\"card-body\"><br><br><img src=\"watermelon_logo.jpg\" height=\"160px\"/><br><br><p>";
             bodyReturn += "Tu as été invité(e) à l'événement</p><h3>" + eventName;
             bodyReturn += "</h3><p>par</par><h5 style=\"font-size:16px;color:FD5757;\">" + eventCreator + "</h5><a href =\"";
-            bodyReturn += c_webAppUrl + "event/" + _eventService.GetFromEventId(eventId) + "\" " + last;
+            bodyReturn += c_webAppUrl + "event/" + eventId + "\" " + last;
             return (bodyReturn);
         }
         public string CreateModifyMailBody(string eventName, string eventId)
@@ -68,7 +68,7 @@ namespace WaterMelon_API.Services
             string bodyReturn = first + "<h5 style=\"font-size:18px;border-radius:12px;color:white;background-color: #FD5757;padding:60px;margin:0px;margin-top:-4px;\">Modification d'événement !</h5></div><div class=\"card-body\"><br><br><img src=\"watermelon_logo.jpg\" height=\"160px\"/><br><br><p>";
             bodyReturn += "L'événement auquel tu participes</p><h3>" + eventName;
             bodyReturn += "</h3><p>a été modifié !<br></p><a href =\"";
-            bodyReturn += c_webAppUrl + "event/" + _eventService.GetFromEventId(eventId) + "\" " + last;
+            bodyReturn += c_webAppUrl + "event/" + eventId + "\" " + last;
             return (bodyReturn);
         }
         public string CreatePasswdRecoveryMailBody(string userId)
@@ -104,10 +104,9 @@ namespace WaterMelon_API.Services
             email.From.Add(MailboxAddress.Parse(_emailSettings.FontColor));
             email.To.Add(MailboxAddress.Parse(to));
             email.Subject = subject;
-            //email.Body = new TextPart(TextFormat.Html) { Text = html };
             var builder = new BodyBuilder();
             builder.HtmlBody = html;
-            var image = builder.LinkedResources.Add(@"H:\WaterMelon-API\WaterMelon-API\MailTemplate\watermelon_logo.jpg");
+            var image = builder.LinkedResources.Add("MailTemplate/watermelon_logo.jpg");
             image.ContentId = MimeUtils.GenerateMessageId();
 
             email.Body = builder.ToMessageBody();

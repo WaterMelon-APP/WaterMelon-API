@@ -135,8 +135,8 @@ namespace WaterMelon_API.Controllers
             {
                 return StatusCode(401, "Aucun utilisateur trouvé avec ces informations.");
             }
-            this._emailService.Send(fpr.Email, _emailService.CreatePasswdRecoveryMailSubject(),
-               _emailService.CreatePasswdRecoveryMailBody(user.Id));
+            /*this._emailService.Send(fpr.Email, _emailService.CreatePasswdRecoveryMailSubject(),
+               _emailService.CreatePasswdRecoveryMailBody(user.Id));*/
             return user;
         }
 
