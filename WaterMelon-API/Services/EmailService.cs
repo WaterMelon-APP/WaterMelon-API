@@ -107,7 +107,7 @@ namespace WaterMelon_API.Services
             //email.Body = new TextPart(TextFormat.Html) { Text = html };
             var builder = new BodyBuilder();
             builder.HtmlBody = html;
-            var image = builder.LinkedResources.Add(@"H:\WaterMelon-API\WaterMelon-API\MailTemplate\watermelon_logo.jpg");
+            var image = builder.LinkedResources.Add("MailTemplate/watermelon_logo.jpg");
             image.ContentId = MimeUtils.GenerateMessageId();
 
             email.Body = builder.ToMessageBody();
