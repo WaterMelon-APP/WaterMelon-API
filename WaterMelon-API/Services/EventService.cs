@@ -53,10 +53,28 @@ namespace WaterMelon_API.Services
         public List<Event> GetFromUser(string id)
             => _events.Find(_event => _event.Guests.Contains(id)).ToList();
 
+        public Event GetByDate(string id, DateTime date)
+        {
+            Event eventLoaded = _events.Find<Event>(eventQuery => eventQuery.Id.Equals(id) && eventQuery.Date == date.Date).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                return null;
+            }
+            return eventLoaded;
+        }
+
         public Event UpdateEvent(string id, EventRequest eventRequest)
         {
             Event eventReceived = new Event(eventRequest);
-            _events.ReplaceOne(e => e.Id == id, eventReceived);
+            Event eventLoaded = _events.Find<Event>(eventQuery => eventQuery.Id.Equals(id)).FirstOrDefault();
+                eventLoaded.Date = eventReceived.Date != null ? eventReceived.Date : eventLoaded.Date;
+                eventLoaded.Guests = eventReceived.Guests != null ? eventReceived.Guests : eventLoaded.Guests;
+                eventLoaded.InvitationList = eventReceived.InvitationList != null ? eventReceived.InvitationList : eventLoaded.InvitationList;
+                eventLoaded.ItemList = eventReceived.ItemList != null ? eventReceived.ItemList : eventLoaded.ItemList;
+                eventLoaded.Address = eventReceived.Address != null ? eventReceived.Address : eventLoaded.Address;
+                eventLoaded.Public = eventReceived.Public != eventLoaded.Public ? eventReceived.Public : eventLoaded.Public;
+                eventLoaded.Name = eventReceived.Name != null ? eventReceived.Name : eventLoaded.Name;
+                _events.ReplaceOne(e => e.Id == id, eventLoaded);
             return GetFromEventId(id);
         }
         public Event UpdateEvent(Event ev)
@@ -101,6 +119,16 @@ namespace WaterMelon_API.Services
         public void RemoveEventWithId(String id)
         {
             _events.DeleteOne(user => user.Id == id);
+        }
+
+        public Event RemoveGuestFromGuests(String id, EventGuestRequest eventGuestRequest)
+        {
+            Event eventLoaded = _events.Find(e => e.Id == id).FirstOrDefault();
+            if (eventLoaded == null)
+            {
+                return null;
+            }
+            return eventLoaded;
         }
 
         public Event RemoveGuestFromEvent(String id, EventGuestRequest eventGuestRequest)

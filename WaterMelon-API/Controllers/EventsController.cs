@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WaterMelon_API.Models;
@@ -13,15 +14,14 @@ namespace WaterMelon_API.Controllers
         private readonly EventService _eventService;
         private readonly ItemService _itemService;
         private readonly NotificationService _notificationService;
-        private readonly EmailService _emailService;
+        // private readonly EmailService _emailService;
 
-        public EventsController(EventService eventService, ItemService itemService, NotificationService notificationService,
-            EmailService emailService)
+        public EventsController(EventService eventService, ItemService itemService, NotificationService notificationService)
         {
             _eventService = eventService;
             _itemService = itemService;
             _notificationService = notificationService;
-            _emailService = emailService;
+            // _emailService = emailService;
         }
 
         // GET: api/Events
@@ -51,6 +51,20 @@ namespace WaterMelon_API.Controllers
         [Authorize]
         [Route("SearchFromUser/{id}")]
         public ActionResult<List<Event>> GetFromUser(string id) => _eventService.GetFromUser(id);
+        
+        // POST: api/Events
+        [HttpGet]
+        [Authorize]
+        [Route("GetFromDate/{id}")]
+        public ActionResult<List<Event>> GetFromDate(string id, [FromBody] DateRequest dateRequest)
+        {
+            Event ev = _eventService.GetByDate(id, dateRequest.Date);
+            if (ev == null)
+            {
+                return NotFound();
+            }
+            return Ok(ev);
+        }
 
         // POST: api/Events
         [HttpPost]
@@ -77,11 +91,11 @@ namespace WaterMelon_API.Controllers
                 return NotFound();
             }
             var eventUsers = res.Guests;
-            /*for (int idx = 0; idx < eventUsers.Count; idx++)
-            {
-                this._emailService.Send(eventUsers[idx], _emailService.CreateModifyMailSubject(res.Name),
-               _emailService.CreateModifyMailBody(res.Name, id));
-            }*/
+            // for (int idx = 0; idx < eventUsers.Count; idx++)
+            // {
+            //     this._emailService.Send(eventUsers[idx], _emailService.CreateModifyMailSubject(res.Name),
+            //    _emailService.CreateModifyMailBody(res.Name, id));
+            // }
             return _eventService.UpdateEvent(id, eventRequest);
         }
 

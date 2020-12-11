@@ -16,22 +16,24 @@ namespace WaterMelon_API.Controllers
         private readonly UserService _userService;
         private readonly FacebookAuthService _facebookAuthService;
         private readonly GoogleAuthService _googleAuthService;
-        private readonly EmailService _emailService;
+        // private readonly EmailService _emailService;
 
-        public UsersController(UserService userService, FacebookAuthService facebookAuthService, GoogleAuthService googleAuthService, EmailService emailService)
+        public UsersController(UserService userService, FacebookAuthService facebookAuthService, GoogleAuthService googleAuthService)
         {
             _userService = userService;
             _facebookAuthService = facebookAuthService;
             _googleAuthService = googleAuthService;
-            _emailService = emailService;
+            // _emailService = emailService;
         }
 
-        [HttpGet(Name = "ping")]
-        [Route("ping")]
-        public IActionResult Ping()
-        {
-            return StatusCode(200, "Pong");
-        }
+        // [HttpGet(Name = "ping")]
+        // [Route("ping")]
+        // public IActionResult Ping()
+        // {
+        //     this._emailService.Send("hugo.roche@epitech.eu", _emailService.CreatePasswdRecoveryMailSubject(),
+        //        _emailService.CreatePasswdRecoveryMailBody("ID"));
+        //     return StatusCode(200, "Pong");
+        // }
 
         // GET: api/Users
         [HttpGet(Name = "GetAll")]
@@ -135,8 +137,8 @@ namespace WaterMelon_API.Controllers
             {
                 return StatusCode(401, "Aucun utilisateur trouvé avec ces informations.");
             }
-            /*this._emailService.Send(fpr.Email, _emailService.CreatePasswdRecoveryMailSubject(),
-               _emailService.CreatePasswdRecoveryMailBody(user.Id));*/
+            // this._emailService.Send(fpr.Email, _emailService.CreatePasswdRecoveryMailSubject(),
+            //    _emailService.CreatePasswdRecoveryMailBody(user.Id));
             return user;
         }
 
