@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WaterMelon_API.Models;
@@ -50,6 +51,20 @@ namespace WaterMelon_API.Controllers
         [Authorize]
         [Route("SearchFromUser/{id}")]
         public ActionResult<List<Event>> GetFromUser(string id) => _eventService.GetFromUser(id);
+        
+        // POST: api/Events
+        [HttpGet]
+        [Authorize]
+        [Route("GetFromDate/{id}")]
+        public ActionResult<List<Event>> GetFromDate(string id, [FromBody] DateRequest dateRequest)
+        {
+            Event ev = _eventService.GetByDate(id, dateRequest.Date);
+            if (ev == null)
+            {
+                return NotFound();
+            }
+            return Ok(ev);
+        }
 
         // POST: api/Events
         [HttpPost]
